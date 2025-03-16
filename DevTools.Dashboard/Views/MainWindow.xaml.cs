@@ -1,5 +1,6 @@
-﻿using System.Windows;
-using System.Windows.Input;
+﻿using System.Runtime.InteropServices;
+using System.Windows;
+using System.Windows.Interop;
 using DevTools.Dashboard.ViewModels;
 
 namespace DevTools.Dashboard.Views;
@@ -14,40 +15,19 @@ public partial class MainWindow : Window
         InitializeComponent();
         DataContext = new MainWindowViewModel();
     }
+    
+    // Import the DWM API function.
+    [DllImport("dwmapi.dll")]
+    private static extern int DwmSetWindowAttribute(IntPtr hwnd, int attr, ref int attrValue, int attrSize);
 
-    // Allow dragging of the window when clicking on the title bar.
-    private void TitleBar_MouseLeftButtonDown(object sender, MouseButtonEventArgs e)
+    protected override void OnSourceInitialized(EventArgs e)
     {
-        // Initiate dragging of the window.
-        if (e.ClickCount == 2)
-        {
-            ToggleMaximize();
-        }
-        else
-        {
-            DragMove();
-        }
-    }
+        base.OnSourceInitialized(e);
 
-    private void Minimize_Click(object sender, RoutedEventArgs e)
-    {
-        WindowState = WindowState.Minimized;
-    }
+        var hwnd = new WindowInteropHelper(this).Handle;
+        var useDarkMode = 1; // 1 to enable dark mode
 
-    private void Maximize_Click(object sender, RoutedEventArgs e)
-    {
-        ToggleMaximize();
-    }
-
-    private void Close_Click(object sender, RoutedEventArgs e)
-    {
-        Close();
-    }
-
-    private void ToggleMaximize()
-    {
-        WindowState = WindowState == WindowState.Normal 
-            ? WindowState.Maximized 
-            : WindowState.Normal;
+        // Attribute value 20 corresponds to DWMWA_USE_IMMERSIVE_DARK_MODE
+        var dwmSetWindowAttribute = DwmSetWindowAttribute(hwnd, 20, ref useDarkMode, sizeof(int));
     }
 }

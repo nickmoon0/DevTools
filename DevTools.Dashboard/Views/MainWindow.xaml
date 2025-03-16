@@ -7,76 +7,21 @@
         mc:Ignorable="d"
         Title="Dev Tools Dashboard" Height="600" Width="1000"
         Background="#FF2E2E2E"
-        WindowStyle="None"
+        WindowStyle="SingleBorderWindow"
         ResizeMode="CanResize">
-  <!-- Use WindowChrome to eliminate the default caption area -->
-  <WindowChrome.WindowChrome>
-    <WindowChrome CaptionHeight="0"
-                  CornerRadius="10"
-                  GlassFrameThickness="0"
-                  ResizeBorderThickness="5" />
-  </WindowChrome.WindowChrome>
   
-  <Grid>
-    <Grid.RowDefinitions>
-      <!-- Header row -->
-      <RowDefinition Height="60"/>
-      <!-- Main content row -->
-      <RowDefinition Height="*"/>
-    </Grid.RowDefinitions>
-    
-    <!-- Custom Title Bar -->
-    <Border Background="#FF1E1E1E" Grid.Row="0" MouseLeftButtonDown="TitleBar_MouseLeftButtonDown">
-      <Grid>
+    <Grid>
         <Grid.ColumnDefinitions>
-          <ColumnDefinition Width="*" />
-          <ColumnDefinition Width="Auto" />
+            <!-- Sidebar column -->
+            <ColumnDefinition Width="250"/>
+            <!-- Main content column -->
+            <ColumnDefinition Width="*"/>
         </Grid.ColumnDefinitions>
-        <!-- Title text -->
-        <TextBlock Text="Dev Tools Dashboard" 
-                   Foreground="White" 
-                   FontSize="24" 
-                   FontWeight="Bold" 
-                   VerticalAlignment="Center" 
-                   Margin="10,0,0,0"/>
-        <!-- Custom Window Control Buttons -->
-        <StackPanel Orientation="Horizontal" Grid.Column="1" Margin="0,0,10,0">
-          <Button Content="&#x2796;" 
-                  Width="40" Height="40" 
-                  Background="Transparent" 
-                  Foreground="White" 
-                  BorderThickness="0" 
-                  Click="Minimize_Click"/>
-          <Button Content="&#x2610;" 
-                  Width="40" Height="40" 
-                  Background="Transparent" 
-                  Foreground="White" 
-                  BorderThickness="0" 
-                  Click="Maximize_Click"/>
-          <Button Content="&#10006;" 
-                  Width="40" Height="40" 
-                  Background="Transparent" 
-                  Foreground="White" 
-                  BorderThickness="0" 
-                  Click="Close_Click"/>
-        </StackPanel>
-      </Grid>
-    </Border>
     
-    <!-- Main content area -->
-    <Grid Grid.Row="1">
-      <Grid.ColumnDefinitions>
-        <!-- Sidebar column -->
-        <ColumnDefinition Width="250"/>
-        <!-- Content column -->
-        <ColumnDefinition Width="*"/>
-      </Grid.ColumnDefinitions>
-      
-      <!-- Sidebar placed in the first column -->
-      <views:SidebarMenu Grid.Column="0" DevTools="{Binding DevTools}" />
-      
-      <!-- Main content area in the second column -->
-      <ContentControl Grid.Column="1" x:Name="MainContent" Background="#FF252525"/>
+        <!-- Sidebar placed in the first column -->
+        <views:SidebarMenu Grid.Column="0" DevTools="{Binding DevTools}" />
+    
+        <!-- Main content area in the second column -->
+        <ContentControl Grid.Column="1" x:Name="MainContent" Background="#FF252525"/>
     </Grid>
-  </Grid>
 </Window>
