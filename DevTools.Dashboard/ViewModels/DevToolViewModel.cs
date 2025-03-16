@@ -9,12 +9,27 @@ using Microsoft.Win32;
 
 namespace DevTools.Dashboard.ViewModels;
 
-public sealed class SidebarMenuViewModel : INotifyPropertyChanged
+public sealed class DevToolViewModel : INotifyPropertyChanged
 {
+    private IDevTool? _selectedDevTool;
+    
     public ObservableCollection<IDevTool> DevTools { get; } = [];
+
+    public IDevTool? SelectedDevTool
+    {
+        get => _selectedDevTool;
+        set
+        {
+            if (_selectedDevTool == value) return;
+            
+            _selectedDevTool = value;
+            OnPropertyChanged(nameof(SelectedDevTool));
+        }
+    }
+    
     public ICommand SelectAssemblyCommand { get; }
 
-    public SidebarMenuViewModel()
+    public DevToolViewModel()
     {
         SelectAssemblyCommand = new RelayCommand(SelectAssembly);
     }

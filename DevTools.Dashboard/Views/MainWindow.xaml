@@ -4,12 +4,15 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:views="clr-namespace:DevTools.Dashboard.Views"
+        xmlns:viewModels="clr-namespace:DevTools.Dashboard.ViewModels"
         mc:Ignorable="d"
         Title="Dev Tools Dashboard" Height="600" Width="1000"
         Background="#FF2E2E2E"
         WindowStyle="SingleBorderWindow"
         ResizeMode="CanResize">
-  
+    <Window.DataContext>
+        <viewModels:DevToolViewModel/>
+    </Window.DataContext>
     <Grid>
         <Grid.ColumnDefinitions>
             <!-- Sidebar column reduced from 500 to 350 -->
@@ -19,14 +22,11 @@
         </Grid.ColumnDefinitions>
     
         <!-- Sidebar placed in the first column -->
-        <views:SidebarMenu x:Name="Sidebar" Grid.Column="0" HorizontalAlignment="Stretch"/>
+        <views:SidebarMenu Grid.Column="0" HorizontalAlignment="Stretch"/>
     
         <!-- Main content area in the second column -->
         <StackPanel Grid.Column="1" Margin="20">
-            <TextBlock Text="{Binding SelectedDevTool.DisplayName, ElementName=Sidebar}" 
-                       FontSize="14" 
-                       FontWeight="Bold" 
-                       Foreground="White"/>
+            <views:ToolDisplay></views:ToolDisplay>
         </StackPanel>
     </Grid>
 </Window>

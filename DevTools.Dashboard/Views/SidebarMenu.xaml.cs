@@ -6,15 +6,6 @@ namespace DevTools.Dashboard.Views;
 
 public partial class SidebarMenu : UserControl
 {
-    public static readonly DependencyProperty SelectedDevToolProperty = 
-        DependencyProperty.Register(nameof(SelectedDevTool), typeof(IDevTool), typeof(SidebarMenu), new PropertyMetadata(null));
-
-    public IDevTool SelectedDevTool
-    {
-        get => (IDevTool)GetValue(SelectedDevToolProperty);
-        set => SetValue(SelectedDevToolProperty, value);
-    }
-    
     public SidebarMenu()
     {
         InitializeComponent();
