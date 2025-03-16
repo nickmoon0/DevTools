@@ -3,13 +3,15 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
-             xmlns:local="clr-namespace:DevTools.Dashboard.Views"
-             xmlns:tooling="clr-namespace:DevTools.Tooling;assembly=DevTools.Tooling"
-             mc:Ignorable="d"
-             d:DesignHeight="300" d:DesignWidth="300">
+             xmlns:interfaces="clr-namespace:DevTools.Tooling.Interfaces;assembly=DevTools.Tooling"
+             xmlns:viewModels="clr-namespace:DevTools.Dashboard.ViewModels"
+             mc:Ignorable="d">
+    <UserControl.DataContext>
+        <viewModels:SidebarMenuViewModel/>
+    </UserControl.DataContext>
     <UserControl.Resources>
         <!-- Data template for displaying each IDevTool -->
-        <DataTemplate x:Key="DevToolTemplate" DataType="{x:Type tooling:IDevTool}">
+        <DataTemplate x:Key="DevToolTemplate" DataType="{x:Type interfaces:IDevTool}">
             <Border Margin="5" Padding="10" Background="Transparent" CornerRadius="5">
                 <Grid>
                     <Grid.ColumnDefinitions>
@@ -27,6 +29,7 @@
                 </Grid>
             </Border>
         </DataTemplate>
+        
         <!-- Style for ListBoxItems to provide modern hover and selected effects -->
         <Style TargetType="ListBoxItem">
             <Setter Property="Background" Value="Transparent"/>
@@ -51,15 +54,71 @@
                 </Setter.Value>
             </Setter>
         </Style>
+        
+        <!-- Small Dark Mode Button Style for a 250-width sidebar -->
+        <Style x:Key="SmallDarkModeButtonStyle" TargetType="Button">
+            <Setter Property="Background" Value="#FF444444"/>
+            <Setter Property="Foreground" Value="White"/>
+            <Setter Property="FontWeight" Value="SemiBold"/>
+            <Setter Property="FontSize" Value="12"/>
+            <!-- Reduced Height and Padding -->
+            <Setter Property="Height" Value="30"/>
+            <Setter Property="Padding" Value="8,3"/>
+            <Setter Property="BorderThickness" Value="0"/>
+            <Setter Property="Cursor" Value="Hand"/>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="Button">
+                        <Border Background="{TemplateBinding Background}" 
+                                Padding="{TemplateBinding Padding}"
+                                CornerRadius="5"
+                                SnapsToDevicePixels="True">
+                            <ContentPresenter HorizontalAlignment="Center" 
+                                              VerticalAlignment="Center"/>
+                        </Border>
+                        <ControlTemplate.Triggers>
+                            <Trigger Property="IsMouseOver" Value="True">
+                                <Setter Property="Background" Value="#FF555555"/>
+                            </Trigger>
+                            <Trigger Property="IsPressed" Value="True">
+                                <Setter Property="Background" Value="#FF333333"/>
+                            </Trigger>
+                            <Trigger Property="IsEnabled" Value="False">
+                                <Setter Property="Opacity" Value="0.5"/>
+                            </Trigger>
+                        </ControlTemplate.Triggers>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
     </UserControl.Resources>
     
-    <Border Background="#FF1E1E1E" Padding="10">
-        <StackPanel>
-            <!-- ListBox bound to the DevTools collection -->
-            <ListBox ItemsSource="{Binding DevTools, RelativeSource={RelativeSource AncestorType=UserControl}}" 
+    <!-- Remove fixed width so it can stretch within the 250 column -->
+    <Border Background="#FF1E1E1E" Padding="10" HorizontalAlignment="Stretch">
+        <DockPanel>
+            <!-- Buttons Container docked at the bottom using a Grid for equal spacing -->
+            <Grid DockPanel.Dock="Bottom" Margin="0,10,0,0">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="*"/>
+                </Grid.ColumnDefinitions>
+                <Button Content="Select Assembly"
+                        Grid.Column="0"
+                        Style="{StaticResource SmallDarkModeButtonStyle}"
+                        Command="{Binding SelectAssemblyCommand}"
+                        Margin="0,0,5,0"/>
+                <Button Content="Select Environment"
+                        Grid.Column="1"
+                        Style="{StaticResource SmallDarkModeButtonStyle}"
+                        Click="SelectEnvironment_Click"
+                        Margin="5,0,0,0"/>
+            </Grid>
+            <!-- Bind directly to the view model's DevTools collection -->
+            <ListBox ItemsSource="{Binding DevTools}"
+                     SelectedItem="{Binding SelectedDevTool, RelativeSource={RelativeSource AncestorType=UserControl}, Mode=TwoWay}"
                      ItemTemplate="{StaticResource DevToolTemplate}"
-                     BorderThickness="0" 
+                     BorderThickness="0"
                      Background="Transparent" />
-        </StackPanel>
+        </DockPanel>
     </Border>
 </UserControl>

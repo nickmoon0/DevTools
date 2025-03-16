@@ -20,4 +20,8 @@
       <ProjectReference Include="..\DevTools.Tooling\DevTools.Tooling.csproj" />
     </ItemGroup>
 
+    <ItemGroup>
+      <Folder Include="Models\" />
+    </ItemGroup>
+
 </Project>

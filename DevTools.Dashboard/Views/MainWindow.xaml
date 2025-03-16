@@ -12,16 +12,21 @@
   
     <Grid>
         <Grid.ColumnDefinitions>
-            <!-- Sidebar column -->
-            <ColumnDefinition Width="250"/>
+            <!-- Sidebar column reduced from 500 to 350 -->
+            <ColumnDefinition Width="300"/>
             <!-- Main content column -->
             <ColumnDefinition Width="*"/>
         </Grid.ColumnDefinitions>
     
         <!-- Sidebar placed in the first column -->
-        <views:SidebarMenu Grid.Column="0" DevTools="{Binding DevTools}" />
+        <views:SidebarMenu x:Name="Sidebar" Grid.Column="0" HorizontalAlignment="Stretch"/>
     
         <!-- Main content area in the second column -->
-        <ContentControl Grid.Column="1" x:Name="MainContent" Background="#FF252525"/>
+        <StackPanel Grid.Column="1" Margin="20">
+            <TextBlock Text="{Binding SelectedDevTool.DisplayName, ElementName=Sidebar}" 
+                       FontSize="14" 
+                       FontWeight="Bold" 
+                       Foreground="White"/>
+        </StackPanel>
     </Grid>
 </Window>

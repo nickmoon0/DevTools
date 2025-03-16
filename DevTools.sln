@@ -7,6 +7,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DevTools.Dashboard", "DevTo
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DevTools.Tooling", "DevTools.Tooling\DevTools.Tooling.csproj", "{762FCDC6-97B2-4113-B3E5-B581DBD5D553}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DevTools.TestScripts", "DevTools.TestScripts\DevTools.TestScripts.csproj", "{BDE96DDF-5D3A-4B70-8B86-6584EA43F9CD}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -24,5 +26,9 @@ Global
 		{762FCDC6-97B2-4113-B3E5-B581DBD5D553}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{762FCDC6-97B2-4113-B3E5-B581DBD5D553}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{762FCDC6-97B2-4113-B3E5-B581DBD5D553}.Release|Any CPU.Build.0 = Release|Any CPU
+		{BDE96DDF-5D3A-4B70-8B86-6584EA43F9CD}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{BDE96DDF-5D3A-4B70-8B86-6584EA43F9CD}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{BDE96DDF-5D3A-4B70-8B86-6584EA43F9CD}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{BDE96DDF-5D3A-4B70-8B86-6584EA43F9CD}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 EndGlobal

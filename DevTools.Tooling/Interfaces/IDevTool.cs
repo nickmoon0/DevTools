@@ -1,4 +1,4 @@
-namespace DevTools.Tooling;
+namespace DevTools.Tooling.Interfaces;
 
 public interface IDevTool
 {

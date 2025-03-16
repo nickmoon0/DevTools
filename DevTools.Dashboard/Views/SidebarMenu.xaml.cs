@@ -1,23 +1,28 @@
-using System.Collections.ObjectModel;
 using System.Windows;
 using System.Windows.Controls;
-using DevTools.Tooling;
+using DevTools.Tooling.Interfaces;
 
 namespace DevTools.Dashboard.Views;
 
 public partial class SidebarMenu : UserControl
 {
+    public static readonly DependencyProperty SelectedDevToolProperty = 
+        DependencyProperty.Register(nameof(SelectedDevTool), typeof(IDevTool), typeof(SidebarMenu), new PropertyMetadata(null));
+
+    public IDevTool SelectedDevTool
+    {
+        get => (IDevTool)GetValue(SelectedDevToolProperty);
+        set => SetValue(SelectedDevToolProperty, value);
+    }
+    
     public SidebarMenu()
     {
         InitializeComponent();
     }
-
-    public ObservableCollection<IDevTool> DevTools
+    
+    private void SelectEnvironment_Click(object sender, RoutedEventArgs e)
     {
-        get => (ObservableCollection<IDevTool>)GetValue(DevToolsProperty);
-        set => SetValue(DevToolsProperty, value);
+        // TODO: Implement environment selection logic here.
+        MessageBox.Show("Select Environment clicked. Functionality to be implemented.");
     }
-
-    public static readonly DependencyProperty DevToolsProperty =
-        DependencyProperty.Register(nameof(DevTools), typeof(ObservableCollection<IDevTool>), typeof(SidebarMenu), new PropertyMetadata(null));
 }
