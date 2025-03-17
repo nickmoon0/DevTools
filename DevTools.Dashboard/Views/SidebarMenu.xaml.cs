@@ -10,10 +10,4 @@ public partial class SidebarMenu : UserControl
     {
         InitializeComponent();
     }
-    
-    private void SelectEnvironment_Click(object sender, RoutedEventArgs e)
-    {
-        // TODO: Implement environment selection logic here.
-        MessageBox.Show("Select Environment clicked. Functionality to be implemented.");
-    }
 }

@@ -95,23 +95,40 @@
     <!-- Remove fixed width so it can stretch within the 250 column -->
     <Border Background="#FF1E1E1E" Padding="10" HorizontalAlignment="Stretch">
         <DockPanel>
-            <!-- Buttons Container docked at the bottom using a Grid for equal spacing -->
-            <Grid DockPanel.Dock="Bottom" Margin="0,10,0,0">
-                <Grid.ColumnDefinitions>
-                    <ColumnDefinition Width="*"/>
-                    <ColumnDefinition Width="*"/>
-                </Grid.ColumnDefinitions>
-                <Button Content="Select Assembly"
-                        Grid.Column="0"
-                        Style="{StaticResource SmallDarkModeButtonStyle}"
-                        Command="{Binding SelectAssemblyCommand}"
-                        Margin="0,0,5,0"/>
-                <Button Content="Select Environment"
-                        Grid.Column="1"
-                        Style="{StaticResource SmallDarkModeButtonStyle}"
-                        Click="SelectEnvironment_Click"
-                        Margin="5,0,0,0"/>
-            </Grid>
+            <!-- Bottom section containing the assembly/environment text and buttons -->
+            <StackPanel DockPanel.Dock="Bottom" Margin="0,10,0,0">
+                <!-- Text field for Assembly Name and Environment -->
+                <TextBlock Text="{Binding LoadedAssemblyName, StringFormat='Assembly: {0}', TargetNullValue='Assembly:'}"
+                           Foreground="White"
+                           FontSize="12"
+                           FontWeight="SemiBold"
+                           Margin="0,0,0,5"/>
+                <!-- Stubbed value -->
+                <TextBlock Text="{Binding 
+                SelectedEnvironment, StringFormat='Environment: {0}', TargetNullValue='Environment:'}" 
+                           Foreground="White"
+                           FontSize="12"
+                           FontWeight="SemiBold"
+                           Margin="0,0,0,5"/>
+                <!-- Buttons Container using a Grid for equal spacing -->
+                <Grid>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="*"/>
+                        <ColumnDefinition Width="*"/>
+                    </Grid.ColumnDefinitions>
+                    <Button Content="Select Assembly"
+                            Grid.Column="0"
+                            Style="{StaticResource SmallDarkModeButtonStyle}"
+                            Command="{Binding SelectAssemblyCommand}"
+                            Margin="0,0,5,0"/>
+                    <Button Content="Select Environment"
+                            Grid.Column="1"
+                            Style="{StaticResource SmallDarkModeButtonStyle}"
+                            Command="{Binding SelectEnvironmentCommand}"
+                            Margin="5,0,0,0"/>
+                </Grid>
+            </StackPanel>
+            
             <!-- Bind directly to the view model's DevTools collection -->
             <ListBox ItemsSource="{Binding DevTools}"
                      SelectedItem="{Binding SelectedDevTool, Mode=TwoWay}"

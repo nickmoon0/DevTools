@@ -15,6 +15,33 @@ namespace DevTools.Dashboard.ViewModels;
 public sealed class DevToolViewModel : INotifyPropertyChanged
 {
     private IDevTool? _selectedDevTool;
+    
+    private string? _selectedEnvironment;
+    private string? _loadedAssemblyName;
+    
+    public string? LoadedAssemblyName
+    {
+        get => _loadedAssemblyName;
+        set
+        {
+            if (_loadedAssemblyName == value) return;
+            
+            _loadedAssemblyName = value;
+            OnPropertyChanged(nameof(LoadedAssemblyName));
+        }
+    }
+
+    public string? SelectedEnvironment
+    {
+        get => _selectedEnvironment;
+        set
+        {
+            if (_selectedEnvironment == value) return;
+            _selectedEnvironment = value;
+            OnPropertyChanged(nameof(SelectedEnvironment));
+        }
+    }
+    
     public ObservableCollection<IDevTool> DevTools { get; } = [];
     public ObservableCollection<DevToolTask> DevToolTasks { get; private set; } = [];
     public ObservableCollection<ConfigParamViewModel> ConfigParams { get; } = [];
@@ -33,13 +60,21 @@ public sealed class DevToolViewModel : INotifyPropertyChanged
         }
     }
     
+    public ICommand SelectEnvironmentCommand { get; }
     public ICommand SelectAssemblyCommand { get; }
-
+    
     public DevToolViewModel()
     {
         SelectAssemblyCommand = new RelayCommand(SelectAssembly);
+        SelectEnvironmentCommand = new RelayCommand(SelectEnvironment);
     }
 
+    private void SelectEnvironment()
+    {
+        // TODO: Implement environment selection
+        SelectedEnvironment = "Development";
+    }
+    
     private void SelectAssembly()
     {
         // Open the file dialog to let the user select an assembly.
@@ -60,6 +95,7 @@ public sealed class DevToolViewModel : INotifyPropertyChanged
         try
         {
             var assembly = AssemblyLoadContext.Default.LoadFromAssemblyPath(path);
+            LoadedAssemblyName = assembly.GetName().Name;
             var toolTypes = assembly.GetTypes()
                 .Where(t => typeof(IDevTool).IsAssignableFrom(t) && t is { IsInterface: false, IsAbstract: false })
                 .ToList();
