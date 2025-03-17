@@ -1,6 +1,5 @@
 using System.Windows;
 using System.Windows.Controls;
-using DevTools.Tooling.Interfaces;
 
 namespace DevTools.Dashboard.Views;
 

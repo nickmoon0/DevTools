@@ -7,14 +7,16 @@ using System.Windows.Input;
 using DevTools.Dashboard.Common;
 using DevTools.Dashboard.Models;
 using DevTools.Tooling.Annotations;
-using DevTools.Tooling.Interfaces;
+using DevTools.Tooling.Common;
+using Microsoft.Extensions.Logging;
 using Microsoft.Win32;
 
 namespace DevTools.Dashboard.ViewModels;
 
 public sealed class DevToolViewModel : INotifyPropertyChanged
 {
-    private IDevTool? _selectedDevTool;
+    private readonly ILoggerFactory _loggerFactory;
+    private DevTool? _selectedDevTool;
     
     private string? _selectedEnvironment;
     private string? _loadedAssemblyName;
@@ -42,11 +44,11 @@ public sealed class DevToolViewModel : INotifyPropertyChanged
         }
     }
     
-    public ObservableCollection<IDevTool> DevTools { get; } = [];
+    public ObservableCollection<DevTool> DevTools { get; } = [];
     public ObservableCollection<DevToolTask> DevToolTasks { get; private set; } = [];
     public ObservableCollection<ConfigParamViewModel> ConfigParams { get; } = [];
     
-    public IDevTool? SelectedDevTool
+    public DevTool? SelectedDevTool
     {
         get => _selectedDevTool;
         set
@@ -67,6 +69,11 @@ public sealed class DevToolViewModel : INotifyPropertyChanged
     {
         SelectAssemblyCommand = new RelayCommand(SelectAssembly);
         SelectEnvironmentCommand = new RelayCommand(SelectEnvironment);
+
+        _loggerFactory = LoggerFactory.Create(builder =>
+        {
+            builder.AddProvider(new DevToolLoggerProvider(Console.WriteLine));
+        });
     }
 
     private void SelectEnvironment()
@@ -97,12 +104,13 @@ public sealed class DevToolViewModel : INotifyPropertyChanged
             var assembly = AssemblyLoadContext.Default.LoadFromAssemblyPath(path);
             LoadedAssemblyName = assembly.GetName().Name;
             var toolTypes = assembly.GetTypes()
-                .Where(t => typeof(IDevTool).IsAssignableFrom(t) && t is { IsInterface: false, IsAbstract: false })
+                .Where(t => typeof(DevTool).IsAssignableFrom(t) && t is { IsInterface: false, IsAbstract: false })
                 .ToList();
 
             foreach (var toolType in toolTypes)
             {
-                if (Activator.CreateInstance(toolType) is IDevTool toolInstance)
+                var logger = _loggerFactory.CreateLogger(toolType);
+                if (Activator.CreateInstance(toolType, logger) is DevTool toolInstance)
                 {
                     DevTools.Add(toolInstance);
                 }

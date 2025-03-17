@@ -3,14 +3,14 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
-             xmlns:interfaces="clr-namespace:DevTools.Tooling.Interfaces;assembly=DevTools.Tooling"
              xmlns:viewModels="clr-namespace:DevTools.Dashboard.ViewModels"
+             xmlns:interfaces="clr-namespace:DevTools.Tooling.Common;assembly=DevTools.Tooling"
              mc:Ignorable="d"
              d:DataContext="{d:DesignInstance Type=viewModels:DevToolViewModel, IsDesignTimeCreatable=True}">
 
     <UserControl.Resources>
         <!-- Data template for displaying each IDevTool -->
-        <DataTemplate x:Key="DevToolTemplate" DataType="{x:Type interfaces:IDevTool}">
+        <DataTemplate x:Key="DevToolTemplate" DataType="{x:Type interfaces:DevTool}">
             <Border Margin="5" Padding="10" Background="Transparent" CornerRadius="5">
                 <Grid>
                     <Grid.ColumnDefinitions>

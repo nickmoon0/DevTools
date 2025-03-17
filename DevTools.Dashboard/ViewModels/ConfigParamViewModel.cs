@@ -2,14 +2,14 @@ using System.ComponentModel;
 using System.Reflection;
 using System.Runtime.CompilerServices;
 using DevTools.Dashboard.Common;
-using DevTools.Tooling.Interfaces;
+using DevTools.Tooling.Common;
 
 namespace DevTools.Dashboard.ViewModels;
 
 public class ConfigParamViewModel : INotifyPropertyChanged
 {
     private readonly PropertyInfo _propertyInfo;
-    private readonly IDevTool _devToolInstance;
+    private readonly DevTool _devToolInstance;
     private string? _value;
 
     public string Name { get; }
@@ -40,7 +40,7 @@ public class ConfigParamViewModel : INotifyPropertyChanged
     }
 
     // Pass in the property info, the devTool object, plus anything else (e.g., description)
-    public ConfigParamViewModel(PropertyInfo propertyInfo, IDevTool devToolInstance, string? value = null, string? description = null)
+    public ConfigParamViewModel(PropertyInfo propertyInfo, DevTool devToolInstance, string? value = null, string? description = null)
     {
         _propertyInfo = propertyInfo;
         _devToolInstance = devToolInstance;

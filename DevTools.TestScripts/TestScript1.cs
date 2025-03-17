@@ -1,24 +1,25 @@
 ﻿using DevTools.Tooling.Annotations;
-using DevTools.Tooling.Interfaces;
+using DevTools.Tooling.Common;
+using Microsoft.Extensions.Logging;
 
 namespace DevTools.TestScripts;
 
-public class TestScript1 : IDevTool
+public class TestScript1(ILogger logger) : DevTool(logger)
 {
+    public override string DisplayName { get; init; } = "Test Script 1";
+    
     [ConfigParam(ConfigParamOptions.Required)]
     public string? Name { get; set; }
-
-    public string DisplayName { get; init; } = "Test Script 1";
     
     [Task("This executes the script")]
     public void Execute()
     {
-        Console.WriteLine($"Name is : {Name}");
+        Logger.LogInformation("Executing the script. Name is {Name}", Name);
     }
 
     [Task]
     public void PrintPlainName()
     {
-        Console.WriteLine(Name);
+        Logger.LogInformation("{Name}", Name);
     }
 }
