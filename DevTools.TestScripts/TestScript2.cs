@@ -11,6 +11,8 @@ public class TestScript2 : IDevTool
     public int NumberOfThings { get; set; }
     
     public string DisplayName { get; init; } = "Test Script 2";
+    
+    [Task]
     public void Execute()
     {
         Console.WriteLine($"Name is: {Name}");

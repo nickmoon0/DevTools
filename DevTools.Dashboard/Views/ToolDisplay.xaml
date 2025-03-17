@@ -48,12 +48,12 @@
         <!-- Modern Button style with custom ControlTemplate -->
         <Style TargetType="Button">
             <Setter Property="HorizontalAlignment" Value="Right"/>
-            <Setter Property="VerticalAlignment" Value="Bottom"/>
+            <Setter Property="VerticalAlignment" Value="Center"/>
             <Setter Property="Background" Value="#4A90E2"/>
             <Setter Property="Foreground" Value="White"/>
             <Setter Property="FontWeight" Value="SemiBold"/>
             <Setter Property="Padding" Value="10,5"/>
-            <Setter Property="Margin" Value="0,10,10,0"/>
+            <Setter Property="Margin" Value="5"/>
             <Setter Property="BorderThickness" Value="0"/>
             <Setter Property="BorderBrush" Value="#4A90E2"/>
             <Setter Property="Cursor" Value="Hand"/>
@@ -87,22 +87,36 @@
     <!-- Layout -->
     <Grid Margin="10">
         <Grid.RowDefinitions>
-            <RowDefinition />          <!-- Fills remaining space -->
-            <RowDefinition Height="Auto" /> <!-- For button -->
+            <RowDefinition Height="Auto"/>    <!-- For DisplayName -->
+            <RowDefinition Height="Auto"/>    <!-- For Configuration subheading -->
+            <RowDefinition Height="Auto"/>    <!-- For ConfigParams -->
+            <RowDefinition Height="Auto"/>    <!-- For Tasks subheading -->
+            <RowDefinition Height="Auto"/>    <!-- For Task Buttons -->
         </Grid.RowDefinitions>
 
         <!-- DisplayName text -->
         <TextBlock Text="{Binding SelectedDevTool.DisplayName, TargetNullValue=''}"
                    HorizontalAlignment="Left"
-                   FontSize="16"
+                   FontSize="24"
+                   FontWeight="Bold"
                    Foreground="White"
-                   Margin="0,0,0,10" />
+                   Margin="0,0,0,10">
+        </TextBlock>
+
+        <!-- Configuration Subheading -->
+        <TextBlock Text="Configuration"
+                   HorizontalAlignment="Left"
+                   FontSize="14"
+                   FontWeight="Bold"
+                   Foreground="LightGray"
+                   Margin="0,0,0,5"
+                   Grid.Row="1" />
 
         <!-- ConfigParams listing -->
         <ItemsControl ItemsSource="{Binding ConfigParams}" 
-                      Margin="0,30,0,0" 
+                      Margin="0,0,0,10" 
                       Grid.IsSharedSizeScope="True"
-                      Grid.Row="0">
+                      Grid.Row="2">
             <!-- Space between items -->
             <ItemsControl.ItemContainerStyle>
                 <Style>
@@ -131,9 +145,31 @@
             </ItemsControl.ItemTemplate>
         </ItemsControl>
 
-        <!-- Execute Button -->
-        <Button Content="Execute"
-                Command="{Binding ExecuteDevToolCommand}"
-                Grid.Row="1" />
+        <!-- Tasks Subheading -->
+        <TextBlock Text="Tasks"
+                   HorizontalAlignment="Left"
+                   FontSize="14"
+                   FontWeight="Bold"
+                   Foreground="LightGray"
+                   Margin="0,0,0,5"
+                   Grid.Row="3" />
+
+        <!-- DevToolTask Buttons -->
+        <ItemsControl ItemsSource="{Binding DevToolTasks}" Grid.Row="4">
+            <ItemsControl.ItemsPanel>
+                <ItemsPanelTemplate>
+                    <WrapPanel Orientation="Horizontal" />
+                </ItemsPanelTemplate>
+            </ItemsControl.ItemsPanel>
+            <ItemsControl.ItemTemplate>
+                <DataTemplate>
+                    <Button Content="{Binding TaskName}" Command="{Binding ExecuteTaskCommand}">
+                        <Button.ToolTip>
+                            <TextBlock Text="{Binding Description}" />
+                        </Button.ToolTip>
+                    </Button>
+                </DataTemplate>
+            </ItemsControl.ItemTemplate>
+        </ItemsControl>
     </Grid>
 </UserControl>

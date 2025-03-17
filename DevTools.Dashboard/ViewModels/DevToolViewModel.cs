@@ -5,6 +5,7 @@ using System.Runtime.Loader;
 using System.Windows;
 using System.Windows.Input;
 using DevTools.Dashboard.Common;
+using DevTools.Dashboard.Models;
 using DevTools.Tooling.Annotations;
 using DevTools.Tooling.Interfaces;
 using Microsoft.Win32;
@@ -13,9 +14,9 @@ namespace DevTools.Dashboard.ViewModels;
 
 public sealed class DevToolViewModel : INotifyPropertyChanged
 {
-    public ICommand ExecuteDevToolCommand { get; }
     private IDevTool? _selectedDevTool;
     public ObservableCollection<IDevTool> DevTools { get; } = [];
+    public ObservableCollection<DevToolTask> DevToolTasks { get; private set; } = [];
     public ObservableCollection<ConfigParamViewModel> ConfigParams { get; } = [];
     
     public IDevTool? SelectedDevTool
@@ -28,7 +29,7 @@ public sealed class DevToolViewModel : INotifyPropertyChanged
             _selectedDevTool = value;
             OnPropertyChanged(nameof(SelectedDevTool));
             
-            LoadConfigParams();
+            LoadSelectedDevTool();
         }
     }
     
@@ -37,7 +38,6 @@ public sealed class DevToolViewModel : INotifyPropertyChanged
     public DevToolViewModel()
     {
         SelectAssemblyCommand = new RelayCommand(SelectAssembly);
-        ExecuteDevToolCommand = new RelayCommand(ExecuteDevTool, CanExecuteDevTool);
     }
 
     private void SelectAssembly()
@@ -78,12 +78,14 @@ public sealed class DevToolViewModel : INotifyPropertyChanged
         }
     }
 
-    private void LoadConfigParams()
+    private void LoadSelectedDevTool()
     {
         ConfigParams.Clear();
-
+        DevToolTasks.Clear();
+        
         if (_selectedDevTool is null) return;
 
+        // ---- Load Config Params ----
         var configProperties = _selectedDevTool
             .GetType()
             .GetProperties()
@@ -103,17 +105,32 @@ public sealed class DevToolViewModel : INotifyPropertyChanged
             
             ConfigParams.Add(configParamVm);
         }
-    }
+        
+        // ---- Load Tasks ----
+        var methods = _selectedDevTool
+            .GetType()
+            .GetMethods()
+            .Where(m => m.GetCustomAttribute<TaskAttribute>() != null);
 
-    private bool CanExecuteDevTool()
-    {
-        // e.g., only allow to execute if there's a selected tool
-        return SelectedDevTool != null;
-    }
-
-    private void ExecuteDevTool()
-    {
-        SelectedDevTool?.Execute();
+        var taskList = (
+            from method in methods
+            let attr = (TaskAttribute)method.GetCustomAttributes(typeof(TaskAttribute), true).First()
+            let command = new RelayCommand(() =>
+            {
+                method.Invoke(_selectedDevTool, null);
+            })
+            select new DevToolTask
+            {
+                TaskName = method.Name,
+                Description = attr.Description,
+                ExecuteTaskCommand = command
+            }
+        ).ToList();
+        
+        foreach (var task in taskList)
+        {
+            DevToolTasks.Add(task);
+        }
     }
     
     public event PropertyChangedEventHandler? PropertyChanged;

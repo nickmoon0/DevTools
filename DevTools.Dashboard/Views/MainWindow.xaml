@@ -6,7 +6,7 @@
         xmlns:views="clr-namespace:DevTools.Dashboard.Views"
         xmlns:viewModels="clr-namespace:DevTools.Dashboard.ViewModels"
         mc:Ignorable="d"
-        Title="Dev Tools Dashboard" Height="600" Width="1000"
+        Title="Dev Tools Dashboard" Height="800" Width="1350"
         Background="#FF2E2E2E"
         WindowStyle="SingleBorderWindow"
         ResizeMode="CanResize">
