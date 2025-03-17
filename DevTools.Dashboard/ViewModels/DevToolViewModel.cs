@@ -21,6 +21,14 @@ public sealed class DevToolViewModel : INotifyPropertyChanged
     private string? _selectedEnvironment;
     private string? _loadedAssemblyName;
     
+    public ObservableCollection<ConfigParamViewModel> ConfigParams { get; } = [];
+    public ObservableCollection<DevTool> DevTools { get; } = [];
+    public ObservableCollection<DevToolTask> DevToolTasks { get; private set; } = [];
+    public ObservableCollection<string> ToolLogs { get; private set; } = [];
+    
+    public ICommand SelectEnvironmentCommand { get; }
+    public ICommand SelectAssemblyCommand { get; }
+    
     public string? LoadedAssemblyName
     {
         get => _loadedAssemblyName;
@@ -44,10 +52,6 @@ public sealed class DevToolViewModel : INotifyPropertyChanged
         }
     }
     
-    public ObservableCollection<DevTool> DevTools { get; } = [];
-    public ObservableCollection<DevToolTask> DevToolTasks { get; private set; } = [];
-    public ObservableCollection<ConfigParamViewModel> ConfigParams { get; } = [];
-    
     public DevTool? SelectedDevTool
     {
         get => _selectedDevTool;
@@ -62,9 +66,6 @@ public sealed class DevToolViewModel : INotifyPropertyChanged
         }
     }
     
-    public ICommand SelectEnvironmentCommand { get; }
-    public ICommand SelectAssemblyCommand { get; }
-    
     public DevToolViewModel()
     {
         SelectAssemblyCommand = new RelayCommand(SelectAssembly);
@@ -72,7 +73,7 @@ public sealed class DevToolViewModel : INotifyPropertyChanged
 
         _loggerFactory = LoggerFactory.Create(builder =>
         {
-            builder.AddProvider(new DevToolLoggerProvider(Console.WriteLine));
+            builder.AddProvider(new DevToolLoggerProvider(AddLog));
         });
     }
 
@@ -126,6 +127,7 @@ public sealed class DevToolViewModel : INotifyPropertyChanged
     {
         ConfigParams.Clear();
         DevToolTasks.Clear();
+        ToolLogs.Clear();
         
         if (_selectedDevTool is null) return;
 
@@ -175,6 +177,11 @@ public sealed class DevToolViewModel : INotifyPropertyChanged
         {
             DevToolTasks.Add(task);
         }
+    }
+
+    private void AddLog(string log)
+    {
+        ToolLogs.Add(log);
     }
     
     public event PropertyChangedEventHandler? PropertyChanged;

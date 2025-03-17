@@ -15,10 +15,12 @@
     </Window.DataContext>
     <Grid>
         <Grid.ColumnDefinitions>
-            <!-- Sidebar column reduced from 500 to 350 -->
+            <!-- Sidebar column -->
             <ColumnDefinition Width="300"/>
             <!-- Main content column -->
             <ColumnDefinition Width="*"/>
+            <!-- Output Panel content column -->
+            <ColumnDefinition Width="500"/>
         </Grid.ColumnDefinitions>
     
         <!-- Sidebar placed in the first column -->
@@ -26,7 +28,11 @@
     
         <!-- Main content area in the second column -->
         <StackPanel Grid.Column="1" Margin="20">
-            <views:ToolDisplay></views:ToolDisplay>
+            <views:ToolDisplay />
         </StackPanel>
+        
+        <views:OutputPanel Grid.Column="2"
+                           VerticalAlignment="Stretch"
+                           HorizontalAlignment="Stretch"/>
     </Grid>
 </Window>

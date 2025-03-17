@@ -5,5 +5,5 @@ namespace DevTools.Tooling.Common;
 public abstract class DevTool(ILogger logger)
 {
     public abstract string DisplayName { get; init; }
-    protected ILogger Logger = logger;
+    protected readonly ILogger Logger = logger;
 }
