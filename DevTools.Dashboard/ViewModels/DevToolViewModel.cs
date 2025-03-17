@@ -1,9 +1,11 @@
 using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Reflection;
+using System.Runtime.Loader;
 using System.Windows;
 using System.Windows.Input;
 using DevTools.Dashboard.Common;
+using DevTools.Tooling.Annotations;
 using DevTools.Tooling.Interfaces;
 using Microsoft.Win32;
 
@@ -11,10 +13,11 @@ namespace DevTools.Dashboard.ViewModels;
 
 public sealed class DevToolViewModel : INotifyPropertyChanged
 {
+    public ICommand ExecuteDevToolCommand { get; }
     private IDevTool? _selectedDevTool;
-    
     public ObservableCollection<IDevTool> DevTools { get; } = [];
-
+    public ObservableCollection<ConfigParamViewModel> ConfigParams { get; } = [];
+    
     public IDevTool? SelectedDevTool
     {
         get => _selectedDevTool;
@@ -24,6 +27,8 @@ public sealed class DevToolViewModel : INotifyPropertyChanged
             
             _selectedDevTool = value;
             OnPropertyChanged(nameof(SelectedDevTool));
+            
+            LoadConfigParams();
         }
     }
     
@@ -32,6 +37,7 @@ public sealed class DevToolViewModel : INotifyPropertyChanged
     public DevToolViewModel()
     {
         SelectAssemblyCommand = new RelayCommand(SelectAssembly);
+        ExecuteDevToolCommand = new RelayCommand(ExecuteDevTool, CanExecuteDevTool);
     }
 
     private void SelectAssembly()
@@ -53,14 +59,10 @@ public sealed class DevToolViewModel : INotifyPropertyChanged
     {
         try
         {
-            // Load the assembly dynamically.
-            var assembly = Assembly.LoadFrom(path);
-
-            // Find all non-abstract types that implement IDevTool.
+            var assembly = AssemblyLoadContext.Default.LoadFromAssemblyPath(path);
             var toolTypes = assembly.GetTypes()
-                                    .Where(t => typeof(IDevTool).IsAssignableFrom(t)
-                                                && t is { IsInterface: false, IsAbstract: false })
-                                    .ToList();
+                .Where(t => typeof(IDevTool).IsAssignableFrom(t) && t is { IsInterface: false, IsAbstract: false })
+                .ToList();
 
             foreach (var toolType in toolTypes)
             {
@@ -76,6 +78,44 @@ public sealed class DevToolViewModel : INotifyPropertyChanged
         }
     }
 
+    private void LoadConfigParams()
+    {
+        ConfigParams.Clear();
+
+        if (_selectedDevTool is null) return;
+
+        var configProperties = _selectedDevTool
+            .GetType()
+            .GetProperties()
+            .Where(p => p.GetCustomAttribute<ConfigParamAttribute>() != null);
+
+        foreach (var prop in configProperties)
+        {
+            var configAttribute = prop.GetCustomAttribute<ConfigParamAttribute>();
+            var value = prop.GetValue(_selectedDevTool)?.ToString();
+
+            var configParamVm = new ConfigParamViewModel(
+                propertyInfo: prop,
+                devToolInstance: _selectedDevTool,
+                value: value,
+                description: configAttribute?.Description
+            );
+            
+            ConfigParams.Add(configParamVm);
+        }
+    }
+
+    private bool CanExecuteDevTool()
+    {
+        // e.g., only allow to execute if there's a selected tool
+        return SelectedDevTool != null;
+    }
+
+    private void ExecuteDevTool()
+    {
+        SelectedDevTool?.Execute();
+    }
+    
     public event PropertyChangedEventHandler? PropertyChanged;
 
     private void OnPropertyChanged(string propertyName) =>
