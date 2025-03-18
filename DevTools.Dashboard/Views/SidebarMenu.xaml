@@ -105,7 +105,7 @@
                            Margin="0,0,0,5"/>
                 <!-- Stubbed value -->
                 <TextBlock Text="{Binding 
-                SelectedEnvironment, StringFormat='Environment: {0}', TargetNullValue='Environment:'}" 
+                EnvironmentSelection.SelectedEnvironment, StringFormat='Environment: {0}', TargetNullValue='Environment:'}" 
                            Foreground="White"
                            FontSize="12"
                            FontWeight="SemiBold"

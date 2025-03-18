@@ -21,5 +21,6 @@ public class TestScript1(ILogger logger) : DevTool(logger)
     public void PrintPlainName()
     {
         Logger.LogInformation("{Name}", Name);
+        Logger.LogInformation("Test Config Value: {Config}", Configuration?["TestVal"]);
     }
 }
