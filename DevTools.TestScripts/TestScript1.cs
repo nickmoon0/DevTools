@@ -9,7 +9,8 @@ public class TestScript1(ILogger logger) : DevTool(logger)
     private int _count = 0;
     private string _testVal = "";
     
-    public override string DisplayName { get; init; } = "Test Script 1";
+    public override string DisplayName => "Test Script 1";
+    public override string? Description => "This is a test script";
     
     [ConfigParam(ConfigParamOptions.Required)]
     public string? Name { get; set; }

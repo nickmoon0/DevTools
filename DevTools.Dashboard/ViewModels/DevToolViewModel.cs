@@ -34,6 +34,15 @@ public sealed class DevToolViewModel : INotifyPropertyChanged
     public ICommand ClearLogsCommand { get; }
     public ICommand SelectEnvironmentCommand { get; }
     public ICommand SelectAssemblyCommand { get; }
+
+    public IConfiguration? SelectedEnvConfig
+    {
+        get
+        {
+            EnvironmentConfigurations.TryGetValue(EnvironmentSelection.SelectedEnvironment ?? "", out var envConfig);
+            return envConfig;
+        }
+    }
     
     public string? LoadedAssemblyName
     {
@@ -76,10 +85,10 @@ public sealed class DevToolViewModel : INotifyPropertyChanged
     
     private void OnEnvironmentSelectionChanged(object? sender, PropertyChangedEventArgs e)
     {
-        if (e.PropertyName == nameof(EnvironmentSelection.SelectedEnvironment))
-        {
-            UpdateDevToolsConfigurations();
-        }
+        if (e.PropertyName != nameof(EnvironmentSelection.SelectedEnvironment)) return;
+        
+        UpdateDevToolsConfigurations();
+        OnPropertyChanged(nameof(SelectedEnvConfig));
     }
     
     private void UpdateDevToolsConfigurations()
@@ -183,6 +192,7 @@ public sealed class DevToolViewModel : INotifyPropertyChanged
     {
         ConfigParams.Clear();
         DevToolTasks.Clear();
+        MonitoredProperties.Clear();
         ToolLogs.Clear();
         
         if (_selectedDevTool is null) return;

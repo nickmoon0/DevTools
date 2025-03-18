@@ -98,14 +98,34 @@
             <RowDefinition Height="Auto" />    <!-- For Monitored Properties -->
         </Grid.RowDefinitions>
 
-        <!-- DisplayName text -->
-        <TextBlock Text="{Binding SelectedDevTool.DisplayName, TargetNullValue=''}"
-                   HorizontalAlignment="Left"
-                   FontSize="24"
-                   FontWeight="Bold"
-                   Foreground="White"
-                   Margin="0,0,0,10">
-        </TextBlock>
+        <!-- Row 0: Title and Description -->
+        <StackPanel Grid.Row="0" Orientation="Vertical">
+            <TextBlock Text="{Binding SelectedDevTool.DisplayName, TargetNullValue=''}"
+                       HorizontalAlignment="Left"
+                       FontSize="24"
+                       FontWeight="Bold"
+                       Foreground="White"
+                       Margin="0,0,0,5"/>
+            <TextBlock Text="{Binding SelectedDevTool.Description}"
+                       HorizontalAlignment="Left"
+                       FontSize="14"
+                       Foreground="LightGray"
+                       Margin="0,0,0,10">
+                <TextBlock.Style>
+                    <Style TargetType="TextBlock">
+                        <Setter Property="Visibility" Value="Visible"/>
+                        <Style.Triggers>
+                            <DataTrigger Binding="{Binding SelectedDevTool.Description}" Value="{x:Null}">
+                                <Setter Property="Visibility" Value="Collapsed"/>
+                            </DataTrigger>
+                            <DataTrigger Binding="{Binding SelectedDevTool.Description}" Value="">
+                                <Setter Property="Visibility" Value="Collapsed"/>
+                            </DataTrigger>
+                        </Style.Triggers>
+                    </Style>
+                </TextBlock.Style>
+            </TextBlock>
+        </StackPanel>
 
         <!-- Configuration Subheading -->
         <TextBlock Text="Configuration"
@@ -129,7 +149,10 @@
             </ItemsControl.ItemContainerStyle>
             <ItemsControl.ItemTemplate>
                 <DataTemplate>
-                    <Grid>
+                    <!-- The Grid now has a tooltip that uses the config param's Description
+                 and is placed below the control -->
+                    <Grid ToolTip="{Binding Description}" 
+                          ToolTipService.Placement="Bottom">
                         <Grid.ColumnDefinitions>
                             <ColumnDefinition Width="Auto" SharedSizeGroup="LabelColumn" />
                             <ColumnDefinition Width="200" />
@@ -167,10 +190,21 @@
             </ItemsControl.ItemsPanel>
             <ItemsControl.ItemTemplate>
                 <DataTemplate>
-                    <Button Content="{Binding TaskName}" Command="{Binding ExecuteTaskCommand}">
-                        <Button.ToolTip>
-                            <TextBlock Text="{Binding Description}" />
-                        </Button.ToolTip>
+                    <Button Content="{Binding TaskName}"
+                            Command="{Binding ExecuteTaskCommand}">
+                        <Button.Style>
+                            <Style TargetType="Button" BasedOn="{StaticResource {x:Type Button}}">
+                                <Setter Property="ToolTip" Value="{Binding Description}" />
+                                <Style.Triggers>
+                                    <DataTrigger Binding="{Binding Description}" Value="{x:Null}">
+                                        <Setter Property="ToolTip" Value="{x:Null}" />
+                                    </DataTrigger>
+                                    <DataTrigger Binding="{Binding Description}" Value="">
+                                        <Setter Property="ToolTip" Value="{x:Null}" />
+                                    </DataTrigger>
+                                </Style.Triggers>
+                            </Style>
+                        </Button.Style>
                     </Button>
                 </DataTemplate>
             </ItemsControl.ItemTemplate>

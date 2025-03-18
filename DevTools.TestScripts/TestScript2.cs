@@ -6,12 +6,12 @@ namespace DevTools.TestScripts;
 
 public class TestScript2(ILogger logger) : DevTool(logger)
 {
-    public override string DisplayName { get; init; } = "Test Script 2";
-
+    public override string DisplayName => "Test Script 2";
+    
     [ConfigParam(ConfigParamOptions.Required)]
     public string? Name { get; set; }
     
-    [ConfigParam]
+    [ConfigParam(description:"Number of items")]
     public int NumberOfThings { get; set; }
     
     [Task]

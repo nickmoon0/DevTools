@@ -7,7 +7,9 @@ namespace DevTools.Tooling.Common;
 
 public abstract class DevTool(ILogger logger) : INotifyPropertyChanged
 {
-    public abstract string DisplayName { get; init; }
+    public abstract string DisplayName { get; }
+    public virtual string? Description { get; } = null;
+    
     protected readonly ILogger Logger = logger;
     public IConfiguration? Configuration { get; set; }
     public event PropertyChangedEventHandler? PropertyChanged;

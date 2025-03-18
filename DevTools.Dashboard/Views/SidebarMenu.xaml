@@ -17,8 +17,25 @@
                         <ColumnDefinition Width="Auto"/>
                         <ColumnDefinition Width="*"/>
                     </Grid.ColumnDefinitions>
-                    <!-- Placeholder for an icon (if available) -->
-                    <Ellipse Width="24" Height="24" Fill="LightGray" VerticalAlignment="Center" />
+                    <!-- Ellipse with a style that changes Fill based on selection -->
+                    <Ellipse Width="24" Height="24" VerticalAlignment="Center">
+                        <Ellipse.Style>
+                            <Style TargetType="Ellipse">
+                                <Setter Property="Fill" Value="LightGray"/>
+                                <Style.Triggers>
+                                    <DataTrigger Binding="{Binding RelativeSource={RelativeSource AncestorType=ListBoxItem}, Path=IsSelected}" Value="True">
+                                        <Setter Property="Fill" Value="#2ecc71"/>
+                                        <Setter Property="Effect">
+                                            <Setter.Value>
+                                                <!-- When selected, add a green glow -->
+                                                <DropShadowEffect Color="#2ecc71" ShadowDepth="0" BlurRadius="10" Opacity="0.7"/>
+                                            </Setter.Value>
+                                        </Setter>
+                                    </DataTrigger>
+                                </Style.Triggers>
+                            </Style>
+                        </Ellipse.Style>
+                    </Ellipse>
                     <TextBlock Grid.Column="1"
                                Text="{Binding DisplayName}" 
                                VerticalAlignment="Center" 
