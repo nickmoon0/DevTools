@@ -7,7 +7,7 @@ using System.Windows;
 using System.Windows.Input;
 using DevTools.Dashboard.Common;
 using DevTools.Dashboard.Models;
-using DevTools.Tooling.Annotations;
+using DevTools.Tooling.Attributes;
 using DevTools.Tooling.Common;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
@@ -24,12 +24,14 @@ public sealed class DevToolViewModel : INotifyPropertyChanged
     public ObservableCollection<ConfigParamViewModel> ConfigParams { get; } = [];
     public ObservableCollection<DevTool> DevTools { get; } = [];
     public ObservableCollection<DevToolTask> DevToolTasks { get; } = [];
+    public ObservableCollection<MonitoredPropertyViewModel> MonitoredProperties { get; } = [];
     public ObservableCollection<string> ToolLogs { get; } = [];
     
     // Dictionary mapping environment names (e.g., "Development", "Production") to their IConfiguration.
     private Dictionary<string, IConfiguration> EnvironmentConfigurations { get; } = [];
     public EnvironmentSelectionViewModel EnvironmentSelection { get; } = new();
     
+    public ICommand ClearLogsCommand { get; }
     public ICommand SelectEnvironmentCommand { get; }
     public ICommand SelectAssemblyCommand { get; }
     
@@ -58,6 +60,7 @@ public sealed class DevToolViewModel : INotifyPropertyChanged
     
     public DevToolViewModel()
     {
+        ClearLogsCommand = new RelayCommand(() => ToolLogs.Clear());
         SelectAssemblyCommand = new RelayCommand(SelectAssembly);
         SelectEnvironmentCommand = new RelayCommand(SelectEnvironment);
 
@@ -70,7 +73,7 @@ public sealed class DevToolViewModel : INotifyPropertyChanged
         EnvironmentSelection.PropertyChanged += OnEnvironmentSelectionChanged;
         LoadEnvironmentConfigurations();
     }
-
+    
     private void OnEnvironmentSelectionChanged(object? sender, PropertyChangedEventArgs e)
     {
         if (e.PropertyName == nameof(EnvironmentSelection.SelectedEnvironment))
@@ -229,6 +232,17 @@ public sealed class DevToolViewModel : INotifyPropertyChanged
         foreach (var task in taskList)
         {
             DevToolTasks.Add(task);
+        }
+        
+        // ---- Load Monitored Properties ----
+        var monitoredProperties = _selectedDevTool
+            .GetType()
+            .GetProperties()
+            .Where(p => p.GetCustomAttribute<MonitoredAttribute>() != null);
+
+        foreach (var prop in monitoredProperties)
+        {
+            MonitoredProperties.Add(new MonitoredPropertyViewModel(prop, _selectedDevTool));
         }
     }
 

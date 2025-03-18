@@ -6,7 +6,7 @@ using DevTools.Tooling.Common;
 
 namespace DevTools.Dashboard.ViewModels;
 
-public class ConfigParamViewModel : INotifyPropertyChanged
+public sealed class ConfigParamViewModel : INotifyPropertyChanged
 {
     private readonly PropertyInfo _propertyInfo;
     private readonly DevTool _devToolInstance;
@@ -54,6 +54,7 @@ public class ConfigParamViewModel : INotifyPropertyChanged
     }
     
     public event PropertyChangedEventHandler? PropertyChanged;
-    protected virtual void OnPropertyChanged([CallerMemberName] string? propertyName = null) =>
+
+    private void OnPropertyChanged([CallerMemberName] string? propertyName = null) =>
         PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
 }

@@ -1,4 +1,4 @@
-namespace DevTools.Tooling.Annotations;
+namespace DevTools.Tooling.Attributes;
 
 [AttributeUsage(AttributeTargets.Method)]
 public class TaskAttribute : Attribute

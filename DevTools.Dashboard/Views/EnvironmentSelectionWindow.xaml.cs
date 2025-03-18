@@ -1,6 +1,8 @@
 using System.ComponentModel;
 using System.Runtime.CompilerServices;
+using System.Runtime.InteropServices;
 using System.Windows;
+using System.Windows.Interop;
 using DevTools.Dashboard.ViewModels;
 
 namespace DevTools.Dashboard.Views;
@@ -56,6 +58,21 @@ public sealed partial class EnvironmentSelectionWindow : Window, INotifyProperty
     private void OnPropertyChanged([CallerMemberName] string? propertyName = null)
     {
         PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
+    }
+    
+    // Import the DWM API function.
+    [DllImport("dwmapi.dll")]
+    private static extern int DwmSetWindowAttribute(IntPtr hwnd, int attr, ref int attrValue, int attrSize);
+
+    protected override void OnSourceInitialized(EventArgs e)
+    {
+        base.OnSourceInitialized(e);
+
+        var hwnd = new WindowInteropHelper(this).Handle;
+        var useDarkMode = 1; // 1 to enable dark mode
+
+        // Attribute value 20 corresponds to DWMWA_USE_IMMERSIVE_DARK_MODE
+        var dwmSetWindowAttribute = DwmSetWindowAttribute(hwnd, 20, ref useDarkMode, sizeof(int));
     }
 }
 
