@@ -187,10 +187,21 @@
             </ItemsControl.ItemsPanel>
             <ItemsControl.ItemTemplate>
                 <DataTemplate>
-                    <Button Content="{Binding TaskName}" Command="{Binding ExecuteTaskCommand}">
-                        <Button.ToolTip>
-                            <TextBlock Text="{Binding Description}" />
-                        </Button.ToolTip>
+                    <Button Content="{Binding TaskName}"
+                            Command="{Binding ExecuteTaskCommand}">
+                        <Button.Style>
+                            <Style TargetType="Button" BasedOn="{StaticResource {x:Type Button}}">
+                                <Setter Property="ToolTip" Value="{Binding Description}" />
+                                <Style.Triggers>
+                                    <DataTrigger Binding="{Binding Description}" Value="{x:Null}">
+                                        <Setter Property="ToolTip" Value="{x:Null}" />
+                                    </DataTrigger>
+                                    <DataTrigger Binding="{Binding Description}" Value="">
+                                        <Setter Property="ToolTip" Value="{x:Null}" />
+                                    </DataTrigger>
+                                </Style.Triggers>
+                            </Style>
+                        </Button.Style>
                     </Button>
                 </DataTemplate>
             </ItemsControl.ItemTemplate>
