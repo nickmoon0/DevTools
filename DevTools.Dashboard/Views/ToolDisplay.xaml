@@ -92,6 +92,8 @@
             <RowDefinition Height="Auto"/>    <!-- For ConfigParams -->
             <RowDefinition Height="Auto"/>    <!-- For Tasks subheading -->
             <RowDefinition Height="Auto"/>    <!-- For Task Buttons -->
+            <RowDefinition Height="Auto" />    <!-- For Controls subheading -->
+            <RowDefinition Height="Auto" />    <!-- For Controls Buttons -->
         </Grid.RowDefinitions>
 
         <!-- DisplayName text -->
@@ -171,5 +173,18 @@
                 </DataTemplate>
             </ItemsControl.ItemTemplate>
         </ItemsControl>
+        
+        <TextBlock Text="Controls"
+                   HorizontalAlignment="Left"
+                   FontSize="14"
+                   FontWeight="Bold"
+                   Foreground="LightGray"
+                   Margin="0,0,0,5"
+                   Grid.Row="5" />
+        
+        <Button Content="Clear Logs"
+                Command="{Binding ClearLogsCommand}"
+                HorizontalAlignment="Left"
+                Grid.Row="6" />
     </Grid>
 </UserControl>

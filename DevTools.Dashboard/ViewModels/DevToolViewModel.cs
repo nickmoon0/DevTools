@@ -30,6 +30,7 @@ public sealed class DevToolViewModel : INotifyPropertyChanged
     private Dictionary<string, IConfiguration> EnvironmentConfigurations { get; } = [];
     public EnvironmentSelectionViewModel EnvironmentSelection { get; } = new();
     
+    public ICommand ClearLogsCommand { get; }
     public ICommand SelectEnvironmentCommand { get; }
     public ICommand SelectAssemblyCommand { get; }
     
@@ -58,6 +59,7 @@ public sealed class DevToolViewModel : INotifyPropertyChanged
     
     public DevToolViewModel()
     {
+        ClearLogsCommand = new RelayCommand(() => ToolLogs.Clear());
         SelectAssemblyCommand = new RelayCommand(SelectAssembly);
         SelectEnvironmentCommand = new RelayCommand(SelectEnvironment);
 
@@ -70,7 +72,7 @@ public sealed class DevToolViewModel : INotifyPropertyChanged
         EnvironmentSelection.PropertyChanged += OnEnvironmentSelectionChanged;
         LoadEnvironmentConfigurations();
     }
-
+    
     private void OnEnvironmentSelectionChanged(object? sender, PropertyChangedEventArgs e)
     {
         if (e.PropertyName == nameof(EnvironmentSelection.SelectedEnvironment))
