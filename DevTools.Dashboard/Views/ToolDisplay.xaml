@@ -98,14 +98,34 @@
             <RowDefinition Height="Auto" />    <!-- For Monitored Properties -->
         </Grid.RowDefinitions>
 
-        <!-- DisplayName text -->
-        <TextBlock Text="{Binding SelectedDevTool.DisplayName, TargetNullValue=''}"
-                   HorizontalAlignment="Left"
-                   FontSize="24"
-                   FontWeight="Bold"
-                   Foreground="White"
-                   Margin="0,0,0,10">
-        </TextBlock>
+        <!-- Row 0: Title and Description -->
+        <StackPanel Grid.Row="0" Orientation="Vertical">
+            <TextBlock Text="{Binding SelectedDevTool.DisplayName, TargetNullValue=''}"
+                       HorizontalAlignment="Left"
+                       FontSize="24"
+                       FontWeight="Bold"
+                       Foreground="White"
+                       Margin="0,0,0,5"/>
+            <TextBlock Text="{Binding SelectedDevTool.Description}"
+                       HorizontalAlignment="Left"
+                       FontSize="14"
+                       Foreground="LightGray"
+                       Margin="0,0,0,10">
+                <TextBlock.Style>
+                    <Style TargetType="TextBlock">
+                        <Setter Property="Visibility" Value="Visible"/>
+                        <Style.Triggers>
+                            <DataTrigger Binding="{Binding SelectedDevTool.Description}" Value="{x:Null}">
+                                <Setter Property="Visibility" Value="Collapsed"/>
+                            </DataTrigger>
+                            <DataTrigger Binding="{Binding SelectedDevTool.Description}" Value="">
+                                <Setter Property="Visibility" Value="Collapsed"/>
+                            </DataTrigger>
+                        </Style.Triggers>
+                    </Style>
+                </TextBlock.Style>
+            </TextBlock>
+        </StackPanel>
 
         <!-- Configuration Subheading -->
         <TextBlock Text="Configuration"
