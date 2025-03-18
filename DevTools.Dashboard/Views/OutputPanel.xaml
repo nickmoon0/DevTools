@@ -3,33 +3,44 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
-             xmlns:local="clr-namespace:DevTools.Dashboard.Views"
              xmlns:viewModels="clr-namespace:DevTools.Dashboard.ViewModels"
              mc:Ignorable="d"
              d:DesignHeight="300" d:DesignWidth="300"
              d:DataContext="{d:DesignInstance Type=viewModels:DevToolViewModel, IsDesignTimeCreatable=True}">
-    
     <Border Background="#FF1E1E1E"
-            Padding="10"
+            Padding="5"
             BorderBrush="#FF444444"
             BorderThickness="1">
-        <ScrollViewer VerticalScrollBarVisibility="Auto"
-                      HorizontalScrollBarVisibility="Disabled">
-            <ItemsControl ItemsSource="{Binding ToolLogs}">
-                <ItemsControl.ItemTemplate>
-                    <DataTemplate>
-                        <Border Background="#FF2E2E2E"
-                                CornerRadius="4"
-                                Padding="5"
-                                Margin="0,0,0,4">
-                            <TextBlock Text="{Binding}" 
-                                       Foreground="White" 
-                                       FontFamily="Consolas"
-                                       TextWrapping="Wrap"/>
-                        </Border>
-                    </DataTemplate>
-                </ItemsControl.ItemTemplate>
-            </ItemsControl>
-        </ScrollViewer>
+        <Grid>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="*"/>
+            </Grid.RowDefinitions>
+            <TextBlock Text="Logs Output" 
+                       FontSize="14" 
+                       FontWeight="Bold" 
+                       Foreground="White"
+                       Margin="0,0,0,5"
+                       Grid.Row="0"/>
+            <ScrollViewer Grid.Row="1"
+                          VerticalScrollBarVisibility="Auto"
+                          HorizontalScrollBarVisibility="Disabled">
+                <ItemsControl ItemsSource="{Binding ToolLogs}">
+                    <ItemsControl.ItemTemplate>
+                        <DataTemplate>
+                            <Border Background="#FF2E2E2E"
+                                    CornerRadius="4"
+                                    Padding="5"
+                                    Margin="0,0,0,4">
+                                <TextBlock Text="{Binding}" 
+                                           Foreground="White" 
+                                           FontFamily="Consolas"
+                                           TextWrapping="Wrap"/>
+                            </Border>
+                        </DataTemplate>
+                    </ItemsControl.ItemTemplate>
+                </ItemsControl>
+            </ScrollViewer>
+        </Grid>
     </Border>
 </UserControl>

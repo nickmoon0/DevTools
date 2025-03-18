@@ -32,8 +32,17 @@
             <views:ToolDisplay />
         </StackPanel>
         
-        <views:OutputPanel Grid.Column="2"
-                           VerticalAlignment="Stretch"
-                           HorizontalAlignment="Stretch"/>
+        <!-- Third column: Stack the EnvironmentConfigurationDisplay above the OutputPanel -->
+        <Grid Grid.Column="2">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="*"/>
+            </Grid.RowDefinitions>
+    
+            <views:EnvironmentConfigDisplay Grid.Row="0" MaxHeight="300" />
+            <views:OutputPanel Grid.Row="1"
+                               VerticalAlignment="Stretch"
+                               HorizontalAlignment="Stretch"/>
+        </Grid>
     </Grid>
 </Window>
