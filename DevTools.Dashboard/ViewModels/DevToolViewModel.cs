@@ -19,16 +19,16 @@ public sealed class DevToolViewModel : INotifyPropertyChanged
 {
     private readonly ILoggerFactory _loggerFactory;
     private DevTool? _selectedDevTool;
-    private string? _selectedEnvironment;
     private string? _loadedAssemblyName;
     
     public ObservableCollection<ConfigParamViewModel> ConfigParams { get; } = [];
     public ObservableCollection<DevTool> DevTools { get; } = [];
-    public ObservableCollection<DevToolTask> DevToolTasks { get; private set; } = [];
-    public ObservableCollection<string> ToolLogs { get; private set; } = [];
+    public ObservableCollection<DevToolTask> DevToolTasks { get; } = [];
+    public ObservableCollection<string> ToolLogs { get; } = [];
     
     // Dictionary mapping environment names (e.g., "Development", "Production") to their IConfiguration.
-    public Dictionary<string, IConfiguration> EnvironmentConfigurations { get; } = [];
+    private Dictionary<string, IConfiguration> EnvironmentConfigurations { get; } = [];
+    public EnvironmentSelectionViewModel EnvironmentSelection { get; } = new();
     
     public ICommand SelectEnvironmentCommand { get; }
     public ICommand SelectAssemblyCommand { get; }
@@ -41,17 +41,6 @@ public sealed class DevToolViewModel : INotifyPropertyChanged
             if (_loadedAssemblyName == value) return;
             _loadedAssemblyName = value;
             OnPropertyChanged(nameof(LoadedAssemblyName));
-        }
-    }
-
-    public string? SelectedEnvironment
-    {
-        get => _selectedEnvironment;
-        set
-        {
-            if (_selectedEnvironment == value) return;
-            _selectedEnvironment = value;
-            OnPropertyChanged(nameof(SelectedEnvironment));
         }
     }
     
@@ -78,13 +67,58 @@ public sealed class DevToolViewModel : INotifyPropertyChanged
         });
         
         // Load all environment configuration files on startup.
+        EnvironmentSelection.PropertyChanged += OnEnvironmentSelectionChanged;
         LoadEnvironmentConfigurations();
     }
 
+    private void OnEnvironmentSelectionChanged(object? sender, PropertyChangedEventArgs e)
+    {
+        if (e.PropertyName == nameof(EnvironmentSelection.SelectedEnvironment))
+        {
+            UpdateDevToolsConfigurations();
+        }
+    }
+    
+    private void UpdateDevToolsConfigurations()
+    {
+        // Clear logs
+        ToolLogs.Clear();
+        
+        // Grab the newly selected environment from EnvironmentSelection
+        var selectedEnv = EnvironmentSelection.SelectedEnvironment;
+        if (selectedEnv is null) return;
+
+        // If we have a matching config, update every DevTool
+        if (!EnvironmentConfigurations.TryGetValue(selectedEnv, out var config)) return;
+        
+        foreach (var devTool in DevTools)
+        {
+            var toolType = devTool.GetType();
+            var envConfigProperty = toolType.GetProperty(nameof(DevTool.Configuration), BindingFlags.Public | BindingFlags.Instance);
+            if (envConfigProperty != null && envConfigProperty.PropertyType.IsInstanceOfType(config))
+            {
+                envConfigProperty.SetValue(devTool, config);
+            }
+        }
+    }
+    
     private void SelectEnvironment()
     {
-        // TODO: Implement environment selection.
-        SelectedEnvironment = "Development";
+        var envWindow = new Views.EnvironmentSelectionWindow
+        {
+            DataContext = EnvironmentSelection
+        };
+
+        EnvironmentSelection.Environments.Clear();
+        foreach (var env in EnvironmentConfigurations.Keys)
+        {
+            EnvironmentSelection.Environments.Add(env);
+        }
+
+        if (envWindow.ShowDialog() == true)
+        {
+            OnPropertyChanged(nameof(EnvironmentSelection));
+        }
     }
     
     private void SelectAssembly()
@@ -120,9 +154,9 @@ public sealed class DevToolViewModel : INotifyPropertyChanged
                 if (Activator.CreateInstance(toolType, logger) is not DevTool toolInstance) continue;
                 
                 // Pass in environment config if it has been set
-                if (_selectedEnvironment is not null)
+                if (EnvironmentSelection.SelectedEnvironment is not null)
                 {
-                    if (EnvironmentConfigurations.TryGetValue(_selectedEnvironment, out var config))
+                    if (EnvironmentConfigurations.TryGetValue(EnvironmentSelection.SelectedEnvironment, out var config))
                     {
                         var envConfigProperty = toolType.GetProperty(nameof(DevTool.Configuration), BindingFlags.Public | BindingFlags.Instance);
                         if (envConfigProperty != null && 
