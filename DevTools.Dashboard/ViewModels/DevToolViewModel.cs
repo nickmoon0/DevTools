@@ -24,6 +24,7 @@ public sealed class DevToolViewModel : INotifyPropertyChanged
     public ObservableCollection<ConfigParamViewModel> ConfigParams { get; } = [];
     public ObservableCollection<DevTool> DevTools { get; } = [];
     public ObservableCollection<DevToolTask> DevToolTasks { get; } = [];
+    public ObservableCollection<MonitoredPropertyViewModel> MonitoredProperties { get; } = [];
     public ObservableCollection<string> ToolLogs { get; } = [];
     
     // Dictionary mapping environment names (e.g., "Development", "Production") to their IConfiguration.
@@ -231,6 +232,17 @@ public sealed class DevToolViewModel : INotifyPropertyChanged
         foreach (var task in taskList)
         {
             DevToolTasks.Add(task);
+        }
+        
+        // ---- Load Monitored Properties ----
+        var monitoredProperties = _selectedDevTool
+            .GetType()
+            .GetProperties()
+            .Where(p => p.GetCustomAttribute<MonitoredAttribute>() != null);
+
+        foreach (var prop in monitoredProperties)
+        {
+            MonitoredProperties.Add(new MonitoredPropertyViewModel(prop, _selectedDevTool));
         }
     }
 

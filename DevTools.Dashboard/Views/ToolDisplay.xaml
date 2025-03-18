@@ -94,6 +94,8 @@
             <RowDefinition Height="Auto"/>    <!-- For Task Buttons -->
             <RowDefinition Height="Auto" />    <!-- For Controls subheading -->
             <RowDefinition Height="Auto" />    <!-- For Controls Buttons -->
+            <RowDefinition Height="Auto" />    <!-- For Monitored Properties subheading -->
+            <RowDefinition Height="Auto" />    <!-- For Monitored Properties -->
         </Grid.RowDefinitions>
 
         <!-- DisplayName text -->
@@ -187,5 +189,28 @@
                     Command="{Binding ClearLogsCommand}"/>
         </StackPanel>
 
+        <!-- Monitored Properties Subheading -->
+        <TextBlock Text="Monitored Properties"
+                   HorizontalAlignment="Left"
+                   FontSize="14"
+                   FontWeight="Bold"
+                   Foreground="LightGray"
+                   Margin="0,10,0,5"
+                   Grid.Row="7" />
+
+        <!-- Monitored Properties Listing -->
+        <ItemsControl ItemsSource="{Binding MonitoredProperties}" Grid.Row="8">
+            <ItemsControl.ItemTemplate>
+                <DataTemplate>
+                    <StackPanel Orientation="Horizontal" Margin="0,2">
+                        <TextBlock Text="{Binding PropertyName}" 
+                                   Foreground="White" Margin="0, 0, 1, 0"/>
+                        <TextBlock Text=":" Foreground="White" Margin="0,0,5,0"/>
+                        <TextBlock Text="{Binding Value}" 
+                                   Foreground="White" />
+                    </StackPanel>
+                </DataTemplate>
+            </ItemsControl.ItemTemplate>
+        </ItemsControl>
     </Grid>
 </UserControl>
