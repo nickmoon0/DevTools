@@ -149,7 +149,10 @@
             </ItemsControl.ItemContainerStyle>
             <ItemsControl.ItemTemplate>
                 <DataTemplate>
-                    <Grid>
+                    <!-- The Grid now has a tooltip that uses the config param's Description
+                 and is placed below the control -->
+                    <Grid ToolTip="{Binding Description}" 
+                          ToolTipService.Placement="Bottom">
                         <Grid.ColumnDefinitions>
                             <ColumnDefinition Width="Auto" SharedSizeGroup="LabelColumn" />
                             <ColumnDefinition Width="200" />

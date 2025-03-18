@@ -11,7 +11,7 @@ public class TestScript2(ILogger logger) : DevTool(logger)
     [ConfigParam(ConfigParamOptions.Required)]
     public string? Name { get; set; }
     
-    [ConfigParam]
+    [ConfigParam(description:"Number of items")]
     public int NumberOfThings { get; set; }
     
     [Task]
