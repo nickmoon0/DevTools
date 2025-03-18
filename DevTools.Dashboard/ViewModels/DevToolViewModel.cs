@@ -183,6 +183,7 @@ public sealed class DevToolViewModel : INotifyPropertyChanged
     {
         ConfigParams.Clear();
         DevToolTasks.Clear();
+        MonitoredProperties.Clear();
         ToolLogs.Clear();
         
         if (_selectedDevTool is null) return;
