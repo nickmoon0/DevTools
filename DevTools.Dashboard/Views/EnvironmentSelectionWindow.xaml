@@ -12,9 +12,7 @@
         ResizeMode="NoResize"
         SizeToContent="Height"
         Background="#FF1E1E1E"
-        d:DataContext="{d:DesignInstance Type=viewModels:EnvironmentSelectionViewModel}"
->
-
+        d:DataContext="{d:DesignInstance Type=viewModels:EnvironmentSelectionViewModel}">
     <Window.Resources>
         <common:NullToBoolConverter x:Key="NullToBoolConverter"/>
         <!-- Dark Mode Button Style (mirrors SidebarMenu's style) -->
