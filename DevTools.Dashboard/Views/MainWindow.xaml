@@ -17,11 +17,11 @@
     <Grid>
         <Grid.ColumnDefinitions>
             <!-- Sidebar column -->
-            <ColumnDefinition Width="300"/>
+            <ColumnDefinition Width="22*"/>
             <!-- Main content column -->
-            <ColumnDefinition Width="*"/>
+            <ColumnDefinition Width="40*"/>
             <!-- Output Panel content column -->
-            <ColumnDefinition Width="500"/>
+            <ColumnDefinition Width="35*"/>
         </Grid.ColumnDefinitions>
     
         <!-- Sidebar placed in the first column -->
@@ -39,7 +39,7 @@
                 <RowDefinition Height="*"/>
             </Grid.RowDefinitions>
     
-            <views:EnvironmentConfigDisplay Grid.Row="0" MaxHeight="300" />
+            <views:EnvironmentConfigDisplay Grid.Row="0" MaxHeight="350" />
             <views:OutputPanel Grid.Row="1"
                                VerticalAlignment="Stretch"
                                HorizontalAlignment="Stretch"/>
