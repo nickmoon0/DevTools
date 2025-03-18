@@ -8,6 +8,9 @@
         <UseWPF>true</UseWPF>
         <ApplicationIcon>Assets\icon.ico</ApplicationIcon>
         <AssemblyName>DevToolsDashboard</AssemblyName>
+    </PropertyGroup>
+    
+    <PropertyGroup Condition="'$(Configuration)' == 'Release'">
         <!-- Publish to standalone EXE file -->
         <PublishSingleFile>true</PublishSingleFile>
         <SelfContained>true</SelfContained>
