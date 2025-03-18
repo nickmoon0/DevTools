@@ -7,7 +7,7 @@ using System.Windows;
 using System.Windows.Input;
 using DevTools.Dashboard.Common;
 using DevTools.Dashboard.Models;
-using DevTools.Tooling.Annotations;
+using DevTools.Tooling.Attributes;
 using DevTools.Tooling.Common;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;

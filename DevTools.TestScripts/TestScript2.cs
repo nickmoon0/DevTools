@@ -1,4 +1,4 @@
-using DevTools.Tooling.Annotations;
+using DevTools.Tooling.Attributes;
 using DevTools.Tooling.Common;
 using Microsoft.Extensions.Logging;
 
