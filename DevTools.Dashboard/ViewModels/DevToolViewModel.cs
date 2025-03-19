@@ -224,20 +224,40 @@ public sealed class DevToolViewModel : INotifyPropertyChanged
             .GetMethods()
             .Where(m => m.GetCustomAttribute<TaskAttribute>() != null);
 
-        var taskList = (
-            from method in methods
-            let attr = (TaskAttribute)method.GetCustomAttributes(typeof(TaskAttribute), true).First()
-            let command = new RelayCommand(() =>
+        var taskList = methods.Select(method =>
+        {
+            var attr = (TaskAttribute)method.GetCustomAttributes(typeof(TaskAttribute), true).First();
+            ICommand command;
+
+            // Check if the method returns Task or Task<T>
+            if (typeof(Task).IsAssignableFrom(method.ReturnType))
             {
-                method.Invoke(_selectedDevTool, null);
-            })
-            select new DevToolTask
+                // Use AsyncRelayCommand for async methods.
+                command = new AsyncRelayCommand(async () =>
+                {
+                    var result = method.Invoke(_selectedDevTool, null);
+                    if (result is Task task)
+                    {
+                        await task.ConfigureAwait(false);
+                    }
+                });
+            }
+            else
+            {
+                // Use a synchronous RelayCommand for sync methods.
+                command = new RelayCommand(() =>
+                {
+                    method.Invoke(_selectedDevTool, null);
+                });
+            }
+
+            return new DevToolTask
             {
                 TaskName = method.Name,
                 Description = attr.Description,
                 ExecuteTaskCommand = command
-            }
-        ).ToList();
+            };
+        }).ToList();
         
         foreach (var task in taskList)
         {
