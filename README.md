@@ -1,7 +1,7 @@
 # DevTools
 Simple interface for running tools written in .NET
 
-## Running
+## How to Run
 1. Clone Repo
 2. `cd` into `DevTools`
 3. Run `dotnet publish -c Release -o publish DevTools.Dashboard/DevTools.Dashboard.csproj`
