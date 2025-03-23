@@ -62,9 +62,14 @@ public sealed class DevToolViewModel : INotifyPropertyChanged
             if (_selectedDevTool == value) return;
             _selectedDevTool = value;
             OnPropertyChanged(nameof(SelectedDevTool));
+            OnPropertyChanged(nameof(SelectedDevToolAssemblyName));
             LoadSelectedDevTool();
         }
     }
+    
+    public string? SelectedDevToolAssemblyName =>
+        _assemblyManager.LoadedAssemblies
+            .FirstOrDefault(x => x.Value.Contains(SelectedDevTool!)).Key;
     
     public DevToolViewModel()
     {
