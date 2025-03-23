@@ -2,7 +2,7 @@ using System.IO;
 using System.Reflection;
 using System.Runtime.Loader;
 
-namespace DevTools.Dashboard.Common;
+namespace DevTools.Dashboard.Common.Plugins;
 public class PluginLoadContext(string pluginPath) : AssemblyLoadContext
 {
     protected override Assembly? Load(AssemblyName assemblyName)

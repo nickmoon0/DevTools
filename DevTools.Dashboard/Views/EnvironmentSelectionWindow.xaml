@@ -5,6 +5,7 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:viewModels="clr-namespace:DevTools.Dashboard.ViewModels"
+        xmlns:converters="clr-namespace:DevTools.Dashboard.Common.Converters"
         x:Name="EnvWindow"
         mc:Ignorable="d"
         Title="Select Environment" Width="400"
@@ -14,7 +15,7 @@
         Background="#FF1E1E1E"
         d:DataContext="{d:DesignInstance Type=viewModels:EnvironmentSelectionViewModel}">
     <Window.Resources>
-        <common:NullToBoolConverter x:Key="NullToBoolConverter"/>
+        <converters:NullToBoolConverter x:Key="NullToBoolConverter"/>
         <!-- Dark Mode Button Style (mirrors SidebarMenu's style) -->
         <Style x:Key="DarkModeButtonStyle" TargetType="Button">
             <Setter Property="Background" Value="#FF444444"/>

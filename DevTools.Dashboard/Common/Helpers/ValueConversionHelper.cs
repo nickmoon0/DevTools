@@ -1,4 +1,4 @@
-namespace DevTools.Dashboard.Common;
+namespace DevTools.Dashboard.Common.Helpers;
 
 public static class ValueConversionHelper
 {
