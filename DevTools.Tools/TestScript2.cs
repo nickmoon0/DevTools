@@ -12,7 +12,7 @@ public class TestScript2(ILogger logger) : DevTool(logger)
     public string? Name { get; set; }
     
     [ConfigParam(description:"Number of items")]
-    public int NumberOfThings { get; set; }
+    public int? NumberOfThings { get; set; }
     
     [Task]
     public void Execute()

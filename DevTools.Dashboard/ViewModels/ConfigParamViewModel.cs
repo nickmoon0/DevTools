@@ -34,7 +34,6 @@ public sealed class ConfigParamViewModel : INotifyPropertyChanged
             }
             catch (Exception ex)
             {
-                // Handle or log parse/conversion errors
                 Console.WriteLine($"Error converting '{_value}' to {propertyType.Name}: {ex.Message}");
             }
         }
