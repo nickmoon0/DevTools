@@ -9,6 +9,7 @@ using DevTools.Common.Attributes;
 using DevTools.Dashboard.Common.Assemblies;
 using DevTools.Dashboard.Common.Commands;
 using DevTools.Dashboard.Models;
+using DevTools.Dashboard.Views;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
 using Microsoft.Win32;
@@ -19,7 +20,6 @@ public sealed class DevToolViewModel : INotifyPropertyChanged
 {
     private readonly AssemblyManager _assemblyManager;
     private DevTool? _selectedDevTool;
-    private string? _loadedAssemblyName;
     
     public ObservableCollection<ConfigParamViewModel> ConfigParams { get; } = [];
     public ObservableCollection<DevTool> DevTools { get; } = [];
@@ -33,24 +33,14 @@ public sealed class DevToolViewModel : INotifyPropertyChanged
     public ICommand ClearLogsCommand { get; }
     public ICommand SelectEnvironmentCommand { get; }
     public ICommand LoadAssemblyCommand { get; }
-
+    public ICommand UnloadAssembliesCommand { get; }
+    
     public IConfiguration? SelectedEnvConfig
     {
         get
         {
             EnvironmentConfigurations.TryGetValue(EnvironmentSelection.SelectedEnvironment ?? "", out var envConfig);
             return envConfig;
-        }
-    }
-    
-    public string? LoadedAssemblyName
-    {
-        get => _loadedAssemblyName;
-        set
-        {
-            if (_loadedAssemblyName == value) return;
-            _loadedAssemblyName = value;
-            OnPropertyChanged(nameof(LoadedAssemblyName));
         }
     }
     
@@ -87,6 +77,28 @@ public sealed class DevToolViewModel : INotifyPropertyChanged
         ClearLogsCommand = new RelayCommand(ClearLogs);
         LoadAssemblyCommand = new RelayCommand(LoadAssembly);
         SelectEnvironmentCommand = new RelayCommand(SelectEnvironment);
+        UnloadAssembliesCommand = new RelayCommand(UnloadAssemblies);
+    }
+    
+    private void UnloadAssemblies()
+    {
+        // Create a dialog window to select assemblies to unload
+        var assemblySelectionViewModel = new AssemblySelectionViewModel(_assemblyManager.LoadedAssemblies.Keys);
+
+        var unloadDialog = new AssemblySelectionWindow
+        {
+            DataContext = assemblySelectionViewModel
+        };
+
+        if (unloadDialog.ShowDialog() != true) return;
+        
+        foreach (var assemblyName in assemblySelectionViewModel.SelectedAssemblies)
+        {
+            _assemblyManager.UnloadAssembly(assemblyName);
+        }
+
+        // Update DevTools collection after unloading assemblies
+        RefreshDevToolsCollection();
     }
     
     private void OnEnvironmentSelectionChanged(object? sender, PropertyChangedEventArgs e)
@@ -150,16 +162,12 @@ public sealed class DevToolViewModel : INotifyPropertyChanged
         };
 
         if (openFileDialog.ShowDialog() != true) return;
-
         var assemblyPath = openFileDialog.FileName;
-        var assemblyName = Path.GetFileNameWithoutExtension(assemblyPath);
 
         try
         {
             _assemblyManager.LoadAssembly(assemblyPath);
             RefreshDevToolsCollection();
-        
-            LoadedAssemblyName = assemblyName;
         }
         catch (Exception ex)
         {

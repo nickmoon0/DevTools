@@ -46,15 +46,21 @@ public class AssemblyManager(ILoggerFactory loggerFactory, IConfiguration? envir
 
     public void UnloadAssembly(string assemblyName)
     {
-        if (!_assemblies.TryGetValue(assemblyName, out var loadedAssembly)) return;
+        if (!_assemblies.TryGetValue(assemblyName, out var loadedAssembly)) 
+            return;
 
+        // Clear references
         loadedAssembly.DevTools.Clear();
+
+        // Unload the collectible context
         loadedAssembly.LoadContext.Unload();
 
         _assemblies.Remove(assemblyName);
 
+        // Force garbage collection to finalize unloading
         GC.Collect();
         GC.WaitForPendingFinalizers();
+        GC.Collect(); // Recommend calling twice to ensure complete cleanup
     }
 
     public void UnloadAllAssemblies()

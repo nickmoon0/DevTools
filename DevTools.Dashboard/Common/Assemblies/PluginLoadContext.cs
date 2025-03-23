@@ -3,7 +3,8 @@ using System.Reflection;
 using System.Runtime.Loader;
 
 namespace DevTools.Dashboard.Common.Assemblies;
-public class PluginLoadContext(string pluginPath) : AssemblyLoadContext
+public class PluginLoadContext(string pluginPath, bool isCollectible = true)
+    : AssemblyLoadContext(name: Path.GetFileNameWithoutExtension(pluginPath), isCollectible: isCollectible)
 {
     protected override Assembly? Load(AssemblyName assemblyName)
     {
