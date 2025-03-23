@@ -6,11 +6,12 @@
              xmlns:viewModels="clr-namespace:DevTools.Dashboard.ViewModels"
              xmlns:common="clr-namespace:DevTools.Dashboard.Common"
              xmlns:collections="clr-namespace:System.Collections.Generic;assembly=mscorlib"
+             xmlns:converters="clr-namespace:DevTools.Dashboard.Common.Converters"
              mc:Ignorable="d"
              d:DesignHeight="300" d:DesignWidth="300"
              d:DataContext="{d:DesignInstance Type=viewModels:DevToolViewModel, IsDesignTimeCreatable=True}">
     <UserControl.Resources>
-        <common:ConfigurationToKeyValueConverter x:Key="ConfigConverter"/>
+        <converters:ConfigurationToKeyValueConverter x:Key="ConfigConverter"/>
         <DataTemplate x:Key="KeyValueTemplate" DataType="{x:Type collections:KeyValuePair`2}">
             <Border Background="#FF2E2E2E"
                     CornerRadius="4"

@@ -3,6 +3,7 @@ using System.Reflection;
 using System.Runtime.CompilerServices;
 using DevTools.Common;
 using DevTools.Dashboard.Common;
+using DevTools.Dashboard.Common.Helpers;
 
 namespace DevTools.Dashboard.ViewModels;
 
@@ -33,7 +34,6 @@ public sealed class ConfigParamViewModel : INotifyPropertyChanged
             }
             catch (Exception ex)
             {
-                // Handle or log parse/conversion errors
                 Console.WriteLine($"Error converting '{_value}' to {propertyType.Name}: {ex.Message}");
             }
         }

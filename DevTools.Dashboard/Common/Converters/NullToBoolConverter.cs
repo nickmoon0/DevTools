@@ -1,7 +1,7 @@
 using System.Globalization;
 using System.Windows.Data;
 
-namespace DevTools.Dashboard.Common;
+namespace DevTools.Dashboard.Common.Converters;
 
 public class NullToBoolConverter : IValueConverter
 {

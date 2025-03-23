@@ -1,6 +1,6 @@
 using System.Windows.Input;
 
-namespace DevTools.Dashboard.Common;
+namespace DevTools.Dashboard.Common.Commands;
 
 public class AsyncRelayCommand : ICommand
 {

@@ -2,7 +2,7 @@ using System.Globalization;
 using System.Windows.Data;
 using Microsoft.Extensions.Configuration;
 
-namespace DevTools.Dashboard.Common;
+namespace DevTools.Dashboard.Common.Converters;
 
 public class ConfigurationToKeyValueConverter : IValueConverter
 {
