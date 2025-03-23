@@ -1,39 +1,23 @@
+using System.IO;
 using System.Reflection;
 using System.Runtime.Loader;
 
-namespace DevTools.Dashboard.Common
+namespace DevTools.Dashboard.Common;
+public class PluginLoadContext(string pluginPath) : AssemblyLoadContext
 {
-    public class PluginLoadContext : AssemblyLoadContext
+    protected override Assembly? Load(AssemblyName assemblyName)
     {
-        private readonly AssemblyDependencyResolver _resolver;
-
-        public PluginLoadContext(string pluginPath)
-            : base(isCollectible: true)
+        // Check if the assembly is already loaded (e.g. DevTools.Common)
+        var defaultAssembly = Default.Assemblies.FirstOrDefault(a => a.FullName == assemblyName.FullName);
+        if (defaultAssembly != null)
         {
-            _resolver = new AssemblyDependencyResolver(pluginPath);
+            return defaultAssembly;
         }
 
-        protected override Assembly? Load(AssemblyName assemblyName)
-        {
-            // Check if the assembly has already been loaded in the default context.
-            var loadedAssembly = AppDomain.CurrentDomain
-                .GetAssemblies()
-                .FirstOrDefault(a => string.Equals(a.FullName, assemblyName.FullName, StringComparison.OrdinalIgnoreCase));
-
-            if (loadedAssembly != null)
-            {
-                return loadedAssembly;
-            }
-
-            // Use the dependency resolver to locate the assembly.
-            var assemblyPath = _resolver.ResolveAssemblyToPath(assemblyName);
-            return assemblyPath != null ? LoadFromAssemblyPath(assemblyPath) : null;
-        }
-
-        protected override IntPtr LoadUnmanagedDll(string unmanagedDllName)
-        {
-            var libraryPath = _resolver.ResolveUnmanagedDllToPath(unmanagedDllName);
-            return libraryPath != null ? LoadUnmanagedDllFromPath(libraryPath) : base.LoadUnmanagedDll(unmanagedDllName);
-        }
+        // Look for the dependency in the same directory as the plugin
+        var dependencyPath = Path.Combine(Path.GetDirectoryName(pluginPath) ?? string.Empty, assemblyName.Name + ".dll");
+        return File.Exists(dependencyPath) ? LoadFromAssemblyPath(dependencyPath) :
+            // Fallback to the default context (returns null)
+            null;
     }
 }

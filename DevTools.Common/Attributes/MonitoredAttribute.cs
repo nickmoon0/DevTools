@@ -1,4 +1,4 @@
-namespace DevTools.Tooling.Attributes;
+namespace DevTools.Common.Attributes;
 
 [AttributeUsage(AttributeTargets.Property)]
 public class MonitoredAttribute : Attribute

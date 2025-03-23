@@ -2,13 +2,12 @@ using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.IO;
 using System.Reflection;
-using System.Runtime.Loader;
 using System.Windows;
 using System.Windows.Input;
+using DevTools.Common;
+using DevTools.Common.Attributes;
 using DevTools.Dashboard.Common;
 using DevTools.Dashboard.Models;
-using DevTools.Tooling.Attributes;
-using DevTools.Tooling.Common;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
 using Microsoft.Win32;
@@ -154,7 +153,9 @@ public sealed class DevToolViewModel : INotifyPropertyChanged
         {
             var loadContext = new PluginLoadContext(path);
             var assembly = loadContext.LoadFromAssemblyPath(path);
+            
             LoadedAssemblyName = assembly.GetName().Name;
+
             var toolTypes = assembly.GetTypes()
                 .Where(t => typeof(DevTool).IsAssignableFrom(t) && t is { IsInterface: false, IsAbstract: false })
                 .ToList();

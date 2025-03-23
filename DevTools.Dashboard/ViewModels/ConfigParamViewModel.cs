@@ -1,8 +1,8 @@
 using System.ComponentModel;
 using System.Reflection;
 using System.Runtime.CompilerServices;
+using DevTools.Common;
 using DevTools.Dashboard.Common;
-using DevTools.Tooling.Common;
 
 namespace DevTools.Dashboard.ViewModels;
 

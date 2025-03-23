@@ -1,4 +1,4 @@
-namespace DevTools.Tooling.Attributes;
+namespace DevTools.Common.Attributes;
 
 [Flags]
 public enum ConfigParamOptions

@@ -3,12 +3,12 @@ using System.Runtime.CompilerServices;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
 
-namespace DevTools.Tooling.Common;
+namespace DevTools.Common;
 
 public abstract class DevTool(ILogger logger) : INotifyPropertyChanged
 {
     public abstract string DisplayName { get; }
-    public virtual string? Description { get; } = null;
+    public virtual string? Description => null;
     
     protected readonly ILogger Logger = logger;
     public IConfiguration? Configuration { get; set; }

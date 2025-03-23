@@ -2,7 +2,7 @@
 
     <PropertyGroup>
         <OutputType>WinExe</OutputType>
-        <TargetFramework>net9.0-windows</TargetFramework>
+        <TargetFrameworks>net9.0-windows;net8.0-windows</TargetFrameworks>
         <Nullable>enable</Nullable>
         <ImplicitUsings>enable</ImplicitUsings>
         <UseWPF>true</UseWPF>
@@ -27,7 +27,7 @@
     </ItemGroup>
 
     <ItemGroup>
-      <ProjectReference Include="..\DevTools.Tooling\DevTools.Tooling.csproj" />
+      <ProjectReference Include="..\DevTools.Common\DevTools.Common.csproj" />
     </ItemGroup>
 
     <ItemGroup>
