@@ -2,7 +2,7 @@ using DevTools.Common;
 using DevTools.Common.Attributes;
 using Microsoft.Extensions.Logging;
 
-namespace DevTools.TestScripts;
+namespace DevTools.Tools;
 
 public class TestScript2(ILogger logger) : DevTool(logger)
 {

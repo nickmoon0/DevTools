@@ -5,7 +5,7 @@ VisualStudioVersion = 17.0.31903.59
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DevTools.Dashboard", "DevTools.Dashboard\DevTools.Dashboard.csproj", "{CD48AD4C-9C42-4054-8D10-F87A37B0DD49}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DevTools.TestScripts", "DevTools.TestScripts\DevTools.TestScripts.csproj", "{BDE96DDF-5D3A-4B70-8B86-6584EA43F9CD}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DevTools.Tools", "DevTools.Tools\DevTools.Tools.csproj", "{BDE96DDF-5D3A-4B70-8B86-6584EA43F9CD}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DevTools.Common", "DevTools.Common\DevTools.Common.csproj", "{45713EED-D758-4A8D-AF83-78EA2503A6D4}"
 EndProject
