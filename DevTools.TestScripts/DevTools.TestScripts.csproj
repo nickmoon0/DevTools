@@ -7,7 +7,7 @@
     </PropertyGroup>
 
     <ItemGroup>
-      <ProjectReference Include="..\DevTools.Tooling\DevTools.Tooling.csproj" />
+      <ProjectReference Include="..\DevTools.Common\DevTools.Common.csproj" />
     </ItemGroup>
 
 </Project>

@@ -1,5 +1,5 @@
-using DevTools.Tooling.Attributes;
-using DevTools.Tooling.Common;
+using DevTools.Common;
+using DevTools.Common.Attributes;
 using Microsoft.Extensions.Logging;
 
 namespace DevTools.TestScripts;

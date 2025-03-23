@@ -1,6 +1,6 @@
 using Microsoft.Extensions.Logging;
 
-namespace DevTools.Tooling.Common;
+namespace DevTools.Common;
 
 public class DevToolLogger(Action<string> logAction) : ILogger
 {
