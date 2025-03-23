@@ -2,7 +2,6 @@ using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.IO;
 using System.Reflection;
-using System.Runtime.Loader;
 using System.Windows;
 using System.Windows.Input;
 using DevTools.Common;
