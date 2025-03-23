@@ -1,3 +1,4 @@
+using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Runtime.CompilerServices;
 using Microsoft.Extensions.Configuration;
@@ -10,8 +11,11 @@ public abstract class DevTool(ILogger logger) : INotifyPropertyChanged
     public abstract string DisplayName { get; }
     public virtual string? Description => null;
     
+    public ObservableCollection<string> ToolLogs { get; private set; } = [];
+    
     protected readonly ILogger Logger = logger;
     public IConfiguration? Configuration { get; set; }
+    
     public event PropertyChangedEventHandler? PropertyChanged;
 
     protected virtual void OnPropertyChanged([CallerMemberName] string? propertyName = null)

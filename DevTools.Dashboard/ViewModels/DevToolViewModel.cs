@@ -24,7 +24,6 @@ public sealed class DevToolViewModel : INotifyPropertyChanged
     public ObservableCollection<DevTool> DevTools { get; } = [];
     public ObservableCollection<DevToolTask> DevToolTasks { get; } = [];
     public ObservableCollection<MonitoredPropertyViewModel> MonitoredProperties { get; } = [];
-    public ObservableCollection<string> ToolLogs { get; } = [];
     
     // Dictionary mapping environment names (e.g., "Development", "Production") to their IConfiguration.
     private Dictionary<string, IConfiguration> EnvironmentConfigurations { get; } = [];
@@ -68,10 +67,10 @@ public sealed class DevToolViewModel : INotifyPropertyChanged
     
     public DevToolViewModel()
     {
-        ClearLogsCommand = new RelayCommand(() => ToolLogs.Clear());
+        ClearLogsCommand = new RelayCommand(ClearLogs);
         SelectAssemblyCommand = new RelayCommand(SelectAssembly);
         SelectEnvironmentCommand = new RelayCommand(SelectEnvironment);
-
+        
         _loggerFactory = LoggerFactory.Create(builder =>
         {
             builder.AddProvider(new DevToolLoggerProvider(AddLog));
@@ -92,9 +91,6 @@ public sealed class DevToolViewModel : INotifyPropertyChanged
     
     private void UpdateDevToolsConfigurations()
     {
-        // Clear logs
-        ToolLogs.Clear();
-        
         // Grab the newly selected environment from EnvironmentSelection
         var selectedEnv = EnvironmentSelection.SelectedEnvironment;
         if (selectedEnv is null) return;
@@ -111,6 +107,11 @@ public sealed class DevToolViewModel : INotifyPropertyChanged
                 envConfigProperty.SetValue(devTool, config);
             }
         }
+    }
+
+    private void ClearLogs()
+    {
+        _selectedDevTool?.ToolLogs.Clear();
     }
     
     private void SelectEnvironment()
@@ -195,7 +196,6 @@ public sealed class DevToolViewModel : INotifyPropertyChanged
         ConfigParams.Clear();
         DevToolTasks.Clear();
         MonitoredProperties.Clear();
-        ToolLogs.Clear();
         
         if (_selectedDevTool is null) return;
 
@@ -312,7 +312,7 @@ public sealed class DevToolViewModel : INotifyPropertyChanged
 
     private void AddLog(string log)
     {
-        ToolLogs.Add(log);
+        _selectedDevTool?.ToolLogs.Add(log);
     }
     
     public event PropertyChangedEventHandler? PropertyChanged;

@@ -25,7 +25,7 @@
             <ScrollViewer Grid.Row="1"
                           VerticalScrollBarVisibility="Auto"
                           HorizontalScrollBarVisibility="Disabled">
-                <ItemsControl ItemsSource="{Binding ToolLogs}">
+                <ItemsControl ItemsSource="{Binding SelectedDevTool.ToolLogs}">
                     <ItemsControl.ItemTemplate>
                         <DataTemplate>
                             <Border Background="#FF2E2E2E"
