@@ -153,6 +153,8 @@ public sealed class DevToolViewModel : INotifyPropertyChanged
         {
             var loadContext = new PluginLoadContext(path);
             var assembly = loadContext.LoadFromAssemblyPath(path);
+            
+            LoadedAssemblyName = assembly.GetName().Name;
 
             var toolTypes = assembly.GetTypes()
                 .Where(t => typeof(DevTool).IsAssignableFrom(t) && t is { IsInterface: false, IsAbstract: false })
