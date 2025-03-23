@@ -1,6 +1,6 @@
-# 🛠️ DevTools Dashboard
+# 🛠️ DevTools
 
-**DevToolsDashboard** is a modern WPF application built with .NET that provides a dynamic interface for loading and executing custom developer tools at runtime. Whether you're automating repetitive tasks or exposing useful debug utilities, this dashboard makes it easy to plug in and go.
+**DevTools** is a modern WPF Dashboard application built with .NET that provides a dynamic interface for loading and executing custom developer tools at runtime. Whether you're automating repetitive tasks or exposing useful debug utilities, this dashboard makes it easy to plug in and go.
 
 ## ✨ Features
 
