@@ -6,9 +6,8 @@ using System.Windows;
 using System.Windows.Input;
 using DevTools.Common;
 using DevTools.Common.Attributes;
-using DevTools.Dashboard.Common;
+using DevTools.Dashboard.Common.Assemblies;
 using DevTools.Dashboard.Common.Commands;
-using DevTools.Dashboard.Common.Plugins;
 using DevTools.Dashboard.Models;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
@@ -18,7 +17,7 @@ namespace DevTools.Dashboard.ViewModels;
 
 public sealed class DevToolViewModel : INotifyPropertyChanged
 {
-    private readonly ILoggerFactory _loggerFactory;
+    private readonly AssemblyManager _assemblyManager;
     private DevTool? _selectedDevTool;
     private string? _loadedAssemblyName;
     
@@ -69,18 +68,20 @@ public sealed class DevToolViewModel : INotifyPropertyChanged
     
     public DevToolViewModel()
     {
-        ClearLogsCommand = new RelayCommand(ClearLogs);
-        SelectAssemblyCommand = new RelayCommand(SelectAssembly);
-        SelectEnvironmentCommand = new RelayCommand(SelectEnvironment);
-        
-        _loggerFactory = LoggerFactory.Create(builder =>
+        var loggerFactory = LoggerFactory.Create(builder =>
         {
             builder.AddProvider(new DevToolLoggerProvider(AddLog));
         });
-        
+
         // Load all environment configuration files on startup.
         EnvironmentSelection.PropertyChanged += OnEnvironmentSelectionChanged;
         LoadEnvironmentConfigurations();
+        
+        _assemblyManager = new AssemblyManager(loggerFactory, SelectedEnvConfig);
+        
+        ClearLogsCommand = new RelayCommand(ClearLogs);
+        SelectAssemblyCommand = new RelayCommand(SelectAssembly);
+        SelectEnvironmentCommand = new RelayCommand(SelectEnvironment);
     }
     
     private void OnEnvironmentSelectionChanged(object? sender, PropertyChangedEventArgs e)
@@ -137,7 +138,6 @@ public sealed class DevToolViewModel : INotifyPropertyChanged
     
     private void SelectAssembly()
     {
-        // Open the file dialog to let the user select an assembly.
         var openFileDialog = new OpenFileDialog
         {
             Filter = "DLL Files (*.dll)|*.dll",
@@ -145,54 +145,34 @@ public sealed class DevToolViewModel : INotifyPropertyChanged
         };
 
         if (openFileDialog.ShowDialog() != true) return;
-        
-        var selectedAssemblyPath = openFileDialog.FileName;
-        LoadAssembly(selectedAssemblyPath);
-    }
 
-    private void LoadAssembly(string path)
-    {
+        var assemblyPath = openFileDialog.FileName;
+        var assemblyName = Path.GetFileNameWithoutExtension(assemblyPath);
+
         try
         {
-            var loadContext = new PluginLoadContext(path);
-            var assembly = loadContext.LoadFromAssemblyPath(path);
-            
-            LoadedAssemblyName = assembly.GetName().Name;
-
-            var toolTypes = assembly.GetTypes()
-                .Where(t => typeof(DevTool).IsAssignableFrom(t) && t is { IsInterface: false, IsAbstract: false })
-                .ToList();
-
-            foreach (var toolType in toolTypes)
-            {
-                var logger = _loggerFactory.CreateLogger(toolType);
-                
-                // Ignore classes which are not 'DevTool's
-                if (Activator.CreateInstance(toolType, logger) is not DevTool toolInstance) continue;
-                
-                // Pass in environment config if it has been set
-                if (EnvironmentSelection.SelectedEnvironment is not null)
-                {
-                    if (EnvironmentConfigurations.TryGetValue(EnvironmentSelection.SelectedEnvironment, out var config))
-                    {
-                        var envConfigProperty = toolType.GetProperty(nameof(DevTool.Configuration), BindingFlags.Public | BindingFlags.Instance);
-                        if (envConfigProperty != null && 
-                            envConfigProperty.PropertyType.IsInstanceOfType(config))
-                        {
-                            envConfigProperty.SetValue(toolInstance, config);
-                        }
-                    }
-                }
-                    
-                DevTools.Add(toolInstance);
-            }
+            _assemblyManager.LoadAssembly(assemblyPath);
+            RefreshDevToolsCollection();
+        
+            LoadedAssemblyName = assemblyName;
         }
         catch (Exception ex)
         {
-            MessageBox.Show($"Error loading assembly: {ex.Message}", "Assembly Load Error", MessageBoxButton.OK, MessageBoxImage.Error);
+            MessageBox.Show($"Failed to load assembly: {ex.Message}", "Load Error", MessageBoxButton.OK, MessageBoxImage.Error);
         }
     }
 
+    private void RefreshDevToolsCollection()
+    {
+        DevTools.Clear();
+
+        foreach (var (_, devTools) in _assemblyManager.LoadedAssemblies)
+        {
+            foreach (var tool in devTools)
+                DevTools.Add(tool);
+        }
+    }
+    
     private void LoadSelectedDevTool()
     {
         ConfigParams.Clear();
