@@ -28,6 +28,7 @@
 
     <ItemGroup>
       <ProjectReference Include="..\DevTools.Common\DevTools.Common.csproj" />
+      <ProjectReference Include="..\DevTools.Tools\DevTools.Tools.csproj" />
     </ItemGroup>
 
     <ItemGroup>

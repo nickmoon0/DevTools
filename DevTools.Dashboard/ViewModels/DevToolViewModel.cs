@@ -78,12 +78,17 @@ public sealed class DevToolViewModel : INotifyPropertyChanged
         LoadAssemblyCommand = new RelayCommand(LoadAssembly);
         SelectEnvironmentCommand = new RelayCommand(SelectEnvironment);
         UnloadAssembliesCommand = new RelayCommand(UnloadAssemblies);
+        
+        // Load the built-in tools
+        _assemblyManager.LoadBuiltInTools();
+        RefreshDevToolsCollection();
     }
     
     private void UnloadAssemblies()
     {
         // Create a dialog window to select assemblies to unload
-        var assemblySelectionViewModel = new AssemblySelectionViewModel(_assemblyManager.LoadedAssemblies.Keys);
+        var assemblySelectionViewModel = new AssemblySelectionViewModel(
+            _assemblyManager.UnloadableAssemblies.Keys);
 
         var unloadDialog = new AssemblySelectionWindow
         {
@@ -94,7 +99,18 @@ public sealed class DevToolViewModel : INotifyPropertyChanged
         
         foreach (var assemblyName in assemblySelectionViewModel.SelectedAssemblies)
         {
-            _assemblyManager.UnloadAssembly(assemblyName);
+            try
+            {
+                _assemblyManager.UnloadAssembly(assemblyName);
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(
+                    $"Failed to unload assembly: {ex.Message}", 
+                    "Unload Error",
+                    MessageBoxButton.OK, 
+                    MessageBoxImage.Error);
+            }
         }
 
         // Update DevTools collection after unloading assemblies
