@@ -32,7 +32,7 @@ public sealed class DevToolViewModel : INotifyPropertyChanged
     
     public ICommand ClearLogsCommand { get; }
     public ICommand SelectEnvironmentCommand { get; }
-    public ICommand SelectAssemblyCommand { get; }
+    public ICommand LoadAssemblyCommand { get; }
 
     public IConfiguration? SelectedEnvConfig
     {
@@ -85,7 +85,7 @@ public sealed class DevToolViewModel : INotifyPropertyChanged
         _assemblyManager = new AssemblyManager(loggerFactory, SelectedEnvConfig);
         
         ClearLogsCommand = new RelayCommand(ClearLogs);
-        SelectAssemblyCommand = new RelayCommand(SelectAssembly);
+        LoadAssemblyCommand = new RelayCommand(LoadAssembly);
         SelectEnvironmentCommand = new RelayCommand(SelectEnvironment);
     }
     
@@ -141,7 +141,7 @@ public sealed class DevToolViewModel : INotifyPropertyChanged
         }
     }
     
-    private void SelectAssembly()
+    private void LoadAssembly()
     {
         var openFileDialog = new OpenFileDialog
         {
