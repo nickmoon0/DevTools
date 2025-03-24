@@ -198,7 +198,10 @@ public sealed class DevToolViewModel : INotifyPropertyChanged
         foreach (var (_, devTools) in _assemblyManager.LoadedAssemblies)
         {
             foreach (var tool in devTools)
+            {
+                tool.Configuration = SelectedEnvConfig;
                 DevTools.Add(tool);
+            }
         }
     }
     
