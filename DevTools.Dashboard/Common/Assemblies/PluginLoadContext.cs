@@ -9,7 +9,9 @@ public class PluginLoadContext(string pluginPath, bool isCollectible = true)
     protected override Assembly? Load(AssemblyName assemblyName)
     {
         // Check if the assembly is already loaded (e.g. DevTools.Common)
-        var defaultAssembly = Default.Assemblies.FirstOrDefault(a => a.FullName == assemblyName.FullName);
+        var defaultAssembly = Default.Assemblies.FirstOrDefault(a => 
+            string.Equals(a.FullName, assemblyName.FullName, StringComparison.OrdinalIgnoreCase));
+        
         if (defaultAssembly != null)
         {
             return defaultAssembly;
